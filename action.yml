@@ -66,6 +66,7 @@ runs:
     - name: install-build-dependencies
       shell: bash
       run: |
+        #Install Build Dependencies
         sudo apt-get update
         sudo apt install \
           gdisk \
@@ -104,6 +105,7 @@ runs:
       env:
         PACMAN_VERSION: 6.0.2
       run: |
+        #Install Pacman
         sudo git clone --depth 1 https://gitlab.manjaro.org/packages/core/pacman.git
         pushd pacman
           sudo wget https://sources.archlinux.org/other/pacman/pacman-${PACMAN_VERSION}.tar.xz
@@ -129,6 +131,7 @@ runs:
     - name: setup-qemu-binfmt
       shell: bash
       run: |
+        #Setup Qemu Binfmt
         sudo wget https://gitlab.manjaro.org/packages/community/manjaro-arm-qemu-static/-/raw/master/qemu-static.conf -O /usr/lib/binfmt.d/qemu-static.conf
         sudo service systemd-binfmt restart
           
@@ -137,6 +140,7 @@ runs:
       env:
         VERSION: 24
       run: |
+        #Install Arch Install Scripts
         sudo wget https://github.com/archlinux/arch-install-scripts/archive/refs/tags/v${VERSION}.tar.gz -O arch-install-scripts.tar.gz
         sudo tar -xvf arch-install-scripts.tar.gz
         sudo make -C arch-install-scripts-${VERSION}
@@ -146,6 +150,7 @@ runs:
     - name: install-manjaro-arm-tools
       shell: bash
       run: |
+        #Install Manjaro Arm Tools
         sudo git clone https://gitlab.manjaro.org/manjaro-arm/applications/manjaro-arm-tools.git
         install_m_a_tools() {
             pkgname=manjaro-arm-tools
@@ -183,9 +188,7 @@ runs:
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/bin/buildarmimg
         
-        # cat /var/lib/manjaro-arm-tools/img/rootfs_aarch64/etc/pacman.conf
-        sudo sed -i '/Architecture/{p;s/.*/ParallelDownloads = 8/;}'
-        cat /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        sudo sed -i '/Architecture/{p;s/.*/ParallelDownloads = 8/;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
     
     #     sudo sed -i "/--populate/s/manjaro-arm/manjaro-arm ${{ inputs.name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
     #     sudo sed -i 's/Optional TrustAll/PackageRequired/' /usr/share/manjaro-arm-tools/lib/functions.sh
@@ -207,6 +210,7 @@ runs:
       env:
         REPO: ${{ inputs.arm-profiles-repo }}
       run: |
+        #Checkout ARM Profiles
         sudo git clone --depth 1 ${REPO} arm-profiles
         
     # # Tmate ##
@@ -225,6 +229,7 @@ runs:
         #CI_GPG_SECRET: ${{ inputs.CI_GPG_SECRET }}
         #CI_GPG_PASSPHRASE: ${{ inputs.CI_GPG_PASSPHRASE }}
       run: |
+        #Build
         [ "$IMGTYPE" != "factory" ] && unset IMGTYPE
         sudo mv -v $GITHUB_WORKSPACE/arm-profiles /usr/share/manjaro-arm-tools/profiles
         if [ -z ${{ inputs.overlay-repo }} ]; then 

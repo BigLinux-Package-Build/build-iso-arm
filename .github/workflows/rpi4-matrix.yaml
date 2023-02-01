@@ -1,4 +1,4 @@
-name: rpi4_images
+name: Rasp 3/4 Matrix
 on:
   workflow_dispatch:
 

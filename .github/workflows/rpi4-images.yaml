@@ -56,3 +56,7 @@ jobs:
             ${{ env.FILE_TORRENT }}
             ${{ env.FILE_PKG }}
             #${{ env.FILE_SIG }}
+            
+      - name: Tmate if failure
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3

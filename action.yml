@@ -183,7 +183,8 @@ runs:
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/bin/buildarmimg
         
-        cat /var/lib/manjaro-arm-tools/img/rootfs_aarch64/etc/pacman.conf
+        # cat /var/lib/manjaro-arm-tools/img/rootfs_aarch64/etc/pacman.conf
+        cat /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
     
     #     sudo sed -i "/--populate/s/manjaro-arm/manjaro-arm ${{ inputs.name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
     #     sudo sed -i 's/Optional TrustAll/PackageRequired/' /usr/share/manjaro-arm-tools/lib/functions.sh
@@ -290,10 +291,6 @@ runs:
         echo "file-pkg=$(basename $FILE_PKG)" >> $GITHUB_OUTPUT
         echo "FILE_PKG=$(basename $FILE_PKG)" >> $GITHUB_ENV
         
-    # # Tmate ##
-    # - name: Setup TMATE Session
-    #   uses: mxschmitt/action-tmate@v3
-
 #    - id: gpg_sign
 #      shell: bash
 #      run: |

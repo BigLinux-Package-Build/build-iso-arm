@@ -189,6 +189,9 @@ runs:
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/bin/buildarmimg
         
         sudo sed -i '/Architecture/{p;s/.*/ParallelDownloads = 8/;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        
+        # sudo sed -i 's/BOOT_MNJRO/BOOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh
+        # sudo sed -i 's/ROOT_MNJRO/ROOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh
     
     #     sudo sed -i "/--populate/s/manjaro-arm/manjaro-arm ${{ inputs.name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
     #     sudo sed -i 's/Optional TrustAll/PackageRequired/' /usr/share/manjaro-arm-tools/lib/functions.sh
@@ -234,10 +237,12 @@ runs:
         sudo mv -v $GITHUB_WORKSPACE/arm-profiles /usr/share/manjaro-arm-tools/profiles
         if [ -z ${{ inputs.overlay-repo }} ]; then 
           # sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH ${IMGTYPE:+-f}
-          sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH -p btrfs -z zstd ${IMGTYPE:+-f}
+          sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH ${IMGTYPE:+-f}
+          #-p btrfs -z zstd
         else
           # sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH -k ${{ inputs.overlay-repo }} ${IMGTYPE:+-f}
-          sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH -p btrfs -z zstd -k ${{ inputs.overlay-repo }} ${IMGTYPE:+-f}
+          sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH -k ${{ inputs.overlay-repo }} ${IMGTYPE:+-f}
+          #-p btrfs -z zstd
         fi
           
         ls -lasih /var/cache/manjaro-arm-tools/img

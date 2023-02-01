@@ -14,7 +14,7 @@ jobs:
         IMG-NAME: [BigLinux]
         DEVICE: [rpi4,generic]
         # EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
-        EDITION: [kde-plasma]
+        EDITION: [kde-plasma,minimal]
         BRANCH: [stable]
     steps:
       - id: time

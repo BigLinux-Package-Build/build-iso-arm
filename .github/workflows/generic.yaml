@@ -1,4 +1,4 @@
-name: rpi4_images
+name: generic_image
 on:
   workflow_dispatch:
 
@@ -11,19 +11,18 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        DEVICE: [rpi4]
-        # EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
-        EDITION: [kde-plasma]
+        DEVICE: [generic]
+        EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
         BRANCH: [stable]
     steps:
       -
         id: time
         uses: boredland/get-time-action@2.0.0
         with:
-          format: 'YYYY-MM-DD_HH-mm'
+          format: '22.MM'
       -
         id: image-build
-        uses: BigLinux-Package-Build/build-iso-arm@main
+        uses: manjaro-arm/rootfs@master
         with:
           device: ${{ matrix.device }}
           edition: ${{ matrix.edition }}

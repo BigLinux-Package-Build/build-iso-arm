@@ -1,6 +1,8 @@
-name: rpi4_images
+name: image_build_all-dev
 on:
   workflow_dispatch:
+#  schedule:
+#    - cron:  '30 2 * * 1'
 
 concurrency:
   group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
@@ -11,19 +13,18 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        DEVICE: [rpi4]
-        # EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
-        EDITION: [kde-plasma]
-        BRANCH: [stable]
+        DEVICE: [generic]
+        EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
+        BRANCH: [unstable]
     steps:
       -
         id: time
         uses: boredland/get-time-action@2.0.0
         with:
-          format: 'YYYY-MM-DD_HH-mm'
+          format: 'YYYYMMDD'
       -
         id: image-build
-        uses: BigLinux-Package-Build/build-iso-arm@main
+        uses: manjaro-arm/rootfs@master
         with:
           device: ${{ matrix.device }}
           edition: ${{ matrix.edition }}
@@ -38,9 +39,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.time.outputs.time }}
-          name: Release ${{ steps.time.outputs.time }}
+          name: Dev ${{ steps.time.outputs.time }}
           draft: false
-          prerelease: false
+          prerelease: true
           files: |
             ${{ env.FILE_PATH }}
             ${{ env.FILE_SHA1 }}

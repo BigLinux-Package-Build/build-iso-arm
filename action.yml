@@ -54,8 +54,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-    -  
-      name: install-build-dependencies
+    - name: install-build-dependencies
       shell: bash
       run: |
         sudo apt-get update
@@ -117,15 +116,14 @@ runs:
           sudo mkdir -p /etc/pacman.d
           sudo touch /etc/pacman.d/mirrorlist
         popd
-    -
-      name: setup-qemu-binfmt
+        
+    - name: setup-qemu-binfmt
       shell: bash
       run: |
         sudo wget https://gitlab.manjaro.org/packages/community/manjaro-arm-qemu-static/-/raw/master/qemu-static.conf -O /usr/lib/binfmt.d/qemu-static.conf
         sudo service systemd-binfmt restart
           
-    - 
-      name: install-arch-install-scripts
+    - name: install-arch-install-scripts
       shell: bash
       env:
         VERSION: 24
@@ -135,8 +133,8 @@ runs:
         sudo make -C arch-install-scripts-${VERSION}
         sudo make -C arch-install-scripts-${VERSION} check
         sudo make -C arch-install-scripts-${VERSION} PREFIX=/usr install
-    -
-      name: install-manjaro-arm-tools
+        
+    - name: install-manjaro-arm-tools
       shell: bash
       run: |
         sudo git clone https://gitlab.manjaro.org/manjaro-arm/applications/manjaro-arm-tools.git
@@ -155,16 +153,20 @@ runs:
           
         sudo sed -i -e 's|1>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh   
         sudo sed -i -e 's|1> /dev/null 2>&1||g' /usr/share/manjaro-arm-tools/lib/functions.sh
-        sudo sed -i -e 's|2>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh 
-    - 
-      name: checkout-arm-profiles
+        sudo sed -i -e 's|2>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh
+        
+    - name: checkout-arm-profiles
       shell: bash
       env:
         REPO: ${{ inputs.arm-profiles-repo }}
       run: |
-        sudo git clone --depth 1 ${REPO} arm-profiles         
-    -
-      id: build
+        sudo git clone --depth 1 ${REPO} arm-profiles
+        
+    # Tmate ##
+    - name: Setup TMATE Session
+      uses: mxschmitt/action-tmate@v3
+        
+    - id: build
       shell: bash
       env:
         DEVICE: ${{ inputs.device }}
@@ -241,8 +243,7 @@ runs:
         echo "file-pkg=$(basename $FILE_PKG)" >> $GITHUB_OUTPUT
         echo "FILE_PKG=$(basename $FILE_PKG)" >> $GITHUB_ENV
 
-#    -
-#      id: gpg_sign
+#    - id: gpg_sign
 #      shell: bash
 #      run: |
 #        if [ -z "${{ inputs.CI_GPG_SECRET }}" ]; then 

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        IMG_NAME: [BigLinux]
+        IMG-NAME: [BigLinux]
         DEVICE: [rpi4]
         # EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
         EDITION: [kde-plasma]

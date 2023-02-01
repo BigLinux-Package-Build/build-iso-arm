@@ -24,6 +24,7 @@ jobs:
       - id: image-build
         uses: BigLinux-Package-Build/build-iso-arm@main
         with:
+          arm-profiles-repo: https://github.com/biglinux/biglinux-arm-profiles
           device: ${{ matrix.device }}
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}

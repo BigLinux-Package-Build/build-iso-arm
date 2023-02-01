@@ -182,6 +182,8 @@ runs:
         
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/bin/buildarmimg
+        
+        cat /var/lib/manjaro-arm-tools/img/rootfs_aarch64/etc/pacman.conf
     
     #     sudo sed -i "/--populate/s/manjaro-arm/manjaro-arm ${{ inputs.name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
     #     sudo sed -i 's/Optional TrustAll/PackageRequired/' /usr/share/manjaro-arm-tools/lib/functions.sh
@@ -193,7 +195,6 @@ runs:
     #     Verficar linha 323 /usr/share/manjaro-arm-tools/lib/functions.sh
     #     OEM linha 509 /usr/share/manjaro-arm-tools/lib/functions.sh
     #     minimal/server linha 460 /usr/share/manjaro-arm-tools/lib/functions.sh
-         cat /var/lib/manjaro-arm-tools/img/rootfs_aarch64/etc/pacman.conf
     #     
     #      
     #     ${{ inputs.name }}

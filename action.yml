@@ -184,6 +184,7 @@ runs:
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/bin/buildarmimg
         
         # cat /var/lib/manjaro-arm-tools/img/rootfs_aarch64/etc/pacman.conf
+        sudo sed -i '/Architecture/{p;s/.*/ParallelDownloads = 8/;}'
         cat /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
     
     #     sudo sed -i "/--populate/s/manjaro-arm/manjaro-arm ${{ inputs.name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh

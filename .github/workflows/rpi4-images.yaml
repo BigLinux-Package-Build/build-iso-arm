@@ -18,17 +18,21 @@ jobs:
         BRANCH: [stable]
     steps:
       - id: time
+        name: Release
         uses: boredland/get-time-action@2.0.0
         with:
           format: 'YYYY-MM-DD_HH-mm'
           
       - id: name
+        name: Name
         shell: bash
         run: |
           #Name
           echo "name=$(echo ${{ matrix.img-name }} | sed -e 's/\(.*\)/\L\1/')" >> $GITHUB_OUTPUT
+          echo ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
           
       - id: image-build
+        name: Image Build
         uses: BigLinux-Package-Build/build-iso-arm@main
         with:
           img-name: ${{ matrix.img-name }}
@@ -41,7 +45,7 @@ jobs:
           #gpg-key: ${{ secrets.CI_GPG_SECRET }}
           #gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}
           
-      - name: Release assets
+      - name: Release Upload
         uses: softprops/action-gh-release@v0.1.15
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

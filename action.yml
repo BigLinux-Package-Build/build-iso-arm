@@ -184,7 +184,7 @@ runs:
         sudo sed -i "s/HOSTNAME=.*/HOSTNAME='${{ inputs.name }}-arm'/" /usr/share/manjaro-arm-tools/lib/functions.sh
         sudo sed -i "s/PASSWORD=.*/PASSWORD='${{ inputs.name }}-arm'/" /usr/share/manjaro-arm-tools/lib/functions.sh
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
-        # sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/bin/buildarmimg
+        sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/bin/buildarmimg
         
         sudo sed -i '/Architecture/{p;s/.*/ParallelDownloads = 8/;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         

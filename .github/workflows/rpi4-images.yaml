@@ -16,13 +16,12 @@ jobs:
         EDITION: [kde-plasma]
         BRANCH: [stable]
     steps:
-      -
-        id: time
+      - id: time
         uses: boredland/get-time-action@2.0.0
         with:
           format: 'YYYY-MM-DD_HH-mm'
-      -
-        id: image-build
+          
+      - id: image-build
         uses: BigLinux-Package-Build/build-iso-arm@main
         with:
           device: ${{ matrix.device }}
@@ -31,8 +30,8 @@ jobs:
           version: ${{ steps.time.outputs.time }}
           #gpg-key: ${{ secrets.CI_GPG_SECRET }}
           #gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}
-      -
-        name: Release assets
+          
+      - name: Release assets
         uses: softprops/action-gh-release@v0.1.15
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

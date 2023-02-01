@@ -155,6 +155,15 @@ runs:
         sudo sed -i -e 's|1> /dev/null 2>&1||g' /usr/share/manjaro-arm-tools/lib/functions.sh
         sudo sed -i -e 's|2>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh
         
+    # - name: BigLinux Changes
+    #   shell: bash
+    #   run: |
+    #     sed "s/#USER=.*/USER='biglinux'/" /etc/manjaro-arm-tools/manjaro-arm-tools.conf
+    #     sed "s/#USER=.*/USER='biglinux'/" /usr/share/manjaro-arm-tools/lib/manjaro-arm-tools.conf
+    #     sed "s/#HOSTNAME=.*/HOSTNAME='biglinux'/" /etc/manjaro-arm-tools/manjaro-arm-tools.conf
+    #     sed "s/#HOSTNAME=.*/HOSTNAME='biglinux'/" /usr/share/manjaro-arm-tools/lib/manjaro-arm-tools.conf
+        
+        
     - name: checkout-arm-profiles
       shell: bash
       env:
@@ -181,9 +190,11 @@ runs:
         [ "$IMGTYPE" != "factory" ] && unset IMGTYPE
         sudo mv -v $GITHUB_WORKSPACE/arm-profiles /usr/share/manjaro-arm-tools/profiles
         if [ -z ${{ inputs.overlay-repo }} ]; then 
-          sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH ${IMGTYPE:+-f}
+          # sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH ${IMGTYPE:+-f}
+          sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH -s biglinux -p btrfs -z zstd ${IMGTYPE:+-f}
         else
-          sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH -k ${{ inputs.overlay-repo }} ${IMGTYPE:+-f}
+          # sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH -k ${{ inputs.overlay-repo }} ${IMGTYPE:+-f}
+          sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH -s biglinux -p btrfs -z zstd -k ${{ inputs.overlay-repo }} ${IMGTYPE:+-f}
         fi
           
         ls -lasih /var/cache/manjaro-arm-tools/img

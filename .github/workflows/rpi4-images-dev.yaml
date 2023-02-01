@@ -25,7 +25,7 @@ jobs:
           format: 'YYYYMMDD'
       -
         id: image-build
-        uses: BigLinux-Package-Build/build-iso-arm@master
+        uses: BigLinux-Package-Build/build-iso-arm@main
         with:
           device: ${{ matrix.device }}
           edition: ${{ matrix.edition }}

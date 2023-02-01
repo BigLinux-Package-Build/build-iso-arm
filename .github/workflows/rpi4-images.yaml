@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         IMG-NAME: [BigLinux]
-        DEVICE: [rpi4]
+        DEVICE: [rpi4,generic]
         # EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
         EDITION: [kde-plasma]
         BRANCH: [stable]
@@ -25,6 +25,7 @@ jobs:
       - id: name
         shell: bash
         run: |
+          #Name
           echo "name=$(echo ${{ matrix.img-name }} | sed -e 's/\(.*\)/\L\1/')" >> $GITHUB_OUTPUT
           
       - id: image-build
@@ -36,7 +37,7 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           version: ${{ steps.time.outputs.time }}
-          # overlay-repo: 
+          # overlay-repo: https://repo.biglinux.com.br/stable/$arch/biglinux-stable.db
           #gpg-key: ${{ secrets.CI_GPG_SECRET }}
           #gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}
           

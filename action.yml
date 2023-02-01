@@ -1,4 +1,4 @@
-name: 'Manjaro Image Action'
+name: 'BigLinux ARM Image Action'
 description: 'Installs prerequisites for building Manjaro ARM on ubuntu'
 inputs:
   arm-profiles-repo:

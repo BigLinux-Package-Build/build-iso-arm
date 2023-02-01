@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         IMG-NAME: [BigLinux]
-        DEVICE: [rpi4,generic]
+        DEVICE: [rpi4]
         # EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
         EDITION: [kde-plasma,minimal]
         BRANCH: [stable]

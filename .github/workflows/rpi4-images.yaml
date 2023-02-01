@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
+        IMG_NAME: [BigLinux]
         DEVICE: [rpi4]
         # EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
         EDITION: [kde-plasma]
@@ -21,13 +22,21 @@ jobs:
         with:
           format: 'YYYY-MM-DD_HH-mm'
           
+      - id: name
+        shell: bash
+        run: |
+          echo "name=$(echo ${{ matrix.img-name }}" | sed -e 's/\(.*\)/\L\1/') >> $GITHUB_OUTPUT
+          
       - id: image-build
         uses: BigLinux-Package-Build/build-iso-arm@main
         with:
+          img-name: ${{ matrix.img-name }}
+          name: ${{ steps.name.outputs.name }}
           device: ${{ matrix.device }}
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           version: ${{ steps.time.outputs.time }}
+          # overlay-repo: 
           #gpg-key: ${{ secrets.CI_GPG_SECRET }}
           #gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}
           

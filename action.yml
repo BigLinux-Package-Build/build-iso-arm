@@ -30,7 +30,7 @@ inputs:
   overlay-repo:
     description: 'custom overlay repo'
     required: false
-    default: 'https://repo.biglinux.com.br/stable/$arch/biglinux-stable.db'
+    # default: 'https://repo.biglinux.com.br/stable/$arch/biglinux-stable.db'
   imgtype:
     description: 'image type: normal (default), factory'
     required: false

@@ -16,7 +16,7 @@ jobs:
         id: time
         uses: boredland/get-time-action@2.0.0
         with:
-          format: 'YYYYMMDD'
+          format: 'YYYY-MM-DD'
       -  
         name: install-build-dependencies
         shell: bash
@@ -130,7 +130,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.time.outputs.time }}
-          name: ${{ steps.time.outputs.time }}
+          name: rootfs ${{ steps.time.outputs.time }}
           draft: false
           prerelease: false
           files: |

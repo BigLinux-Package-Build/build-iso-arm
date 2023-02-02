@@ -144,13 +144,9 @@ jobs:
           ls -lasih $IMGDIR
           
           FILE_PATH=$(find $IMGDIR -type f -name "*.tar.gz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
-          # sudo cp -v ${IMGDIR}/BigLinux-ARM-$ARCH-latest.tar.gz .
+          sudo cp -v ${IMGDIR}/BigLinux-ARM-$ARCH-latest.tar.gz .
 
           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
-          
-      # # Tmate ##
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
           
       - name: Release assets
         uses: softprops/action-gh-release@v0.1.15
@@ -163,3 +159,8 @@ jobs:
           prerelease: false
           files: |
             ${{ env.FILE_PATH }}
+
+      - name: Tmate if failure
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+          

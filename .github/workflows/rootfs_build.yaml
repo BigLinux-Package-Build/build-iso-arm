@@ -142,7 +142,7 @@ jobs:
           ls -lasih $IMGDIR
           
           FILE_PATH=$(find $IMGDIR -type f -name "*.tar.gz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
-          cp -v ${IMGDIR}/BigLinux-ARM-$ARCH-latest.tar.gz .
+          sudo cp -v ${IMGDIR}/BigLinux-ARM-$ARCH-latest.tar.gz .
 
           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
           

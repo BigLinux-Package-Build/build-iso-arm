@@ -116,53 +116,19 @@ jobs:
       - name: build
         shell: bash
         run: |
-          # sudo buildrootfs
+          sudo sed -i ':a;$!{N;ba;};s/\(.*\)compress_rootfs/\1/' /usr/bin/buildrootfs
+          sudo buildrootfs
+              
+          #BigLinux Changes
+          echo 'Welcome to BigLinux ARM
+          ~~Website:  https://www.biglinux.com.br
+          ~~Forum:    https://forum.biglinux.com.br
+          ~~Telegram: https://t.me/BigLinuxCommunity' | sudo tee $BUILDDIR/$ARCH/etc/motd
           
-          # Set globals
-          LIBDIR=/usr/share/manjaro-arm-tools/lib
-          ARCH="aarch64"
-
-          # Import the library
-          source $LIBDIR/functions.sh
-
-          create_rootfs () {
-              # Remove old rootfs if it exists
-              if [ -d $BUILDDIR/$ARCH ]; then
-                  echo "Removing old rootfs..."
-                  sudo rm -rf $BUILDDIR/$ARCH
-              fi
-
-              # Perform basic rootfs initialization
-              msg "Creating rootfs..."
-              sudo mkdir -p $BUILDDIR/$ARCH/etc
-              sudo ln -s ../usr/lib/os-release $BUILDDIR/$ARCH/etc/os-release
-              sudo $LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman
-
-              # Enable cross-architecture chrooting
-              sudo cp -a /usr/bin/qemu-aarch64-static $BUILDDIR/$ARCH/usr/bin
-              
-              #BigLinux Changes
-              echo 'Welcome to BigLinux ARM
-              ~~Website:  https://www.biglinux.com.br
-              ~~Forum:    https://forum.biglinux.com.br
-              ~~Telegram: https://t.me/BigLinuxCommunity' | sudo tee $BUILDDIR/$ARCH/etc/motd
-              
-              # Fix SSL in the rootfs
-              sudo $NSPAWN $BUILDDIR/$ARCH update-ca-trust
-              
-              sudo rm -f $BUILDDIR/$ARCH/var/cache/pacman/pkg/*
-              sudo $NSPAWN $BUILDDIR/$ARCH pacman-mirrors -f5 > /dev/null 2>&1
-          }
-
-          compress_rootfs () {
-              msg "Compressing rootfs..."
-              cd $BUILDDIR/$ARCH
-              sudo tar -czf $IMGDIR/Manjaro-ARM-$ARCH-latest.tar.gz .
-              sudo rm -rf $BUILDDIR/$ARCH
-          }
-          
-          create_rootfs
-          compress_rootfs
+          #Compressing rootfs...
+          cd $BUILDDIR/$ARCH
+          sudo tar -czf $IMGDIR/Manjaro-ARM-$ARCH-latest.tar.gz .
+          sudo rm -rf $BUILDDIR/$ARCH
           
           ls -lasih /var/cache/manjaro-arm-tools/img
           

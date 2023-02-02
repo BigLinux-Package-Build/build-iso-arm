@@ -160,7 +160,7 @@ jobs:
           files: |
             ${{ env.FILE_PATH }}
 
-      - name: Tmate if failure
-        if: ${{ failure() }}
-        uses: mxschmitt/action-tmate@v3
+      # - name: Tmate if failure
+      #   if: ${{ failure() }}
+      #   uses: mxschmitt/action-tmate@v3
           

@@ -136,13 +136,13 @@ jobs:
           
           #Compressing rootfs...
           cd $BUILDDIR/$ARCH
-          sudo tar -czf $IMGDIR/Manjaro-ARM-$ARCH-latest.tar.gz .
+          sudo tar -czf $IMGDIR/BigLinux-ARM-$ARCH-latest.tar.gz .
           sudo rm -rf $BUILDDIR/$ARCH
           
           ls -lasih $IMGDIR
           
           FILE_PATH=$(find /var/cache/manjaro-arm-tools/img -type f -name "*.tar.gz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
-          # cp -v $FILE_PATH .
+          cp -v $FILE_PATH BigLinux-ARM-$ARCH-latest.tar.gz
 
           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
           

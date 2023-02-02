@@ -173,19 +173,30 @@ runs:
       shell: bash
       run: |
         #BigLinux Changes
+        
+        #Change User
         # sudo sed -i "s/#USER=.*/USER='${{ inputs.name }}'/" /etc/manjaro-arm-tools/manjaro-arm-tools.conf
         # sudo sed -i "s/#USER=.*/USER='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/manjaro-arm-tools.conf
-        # sudo sed -i "s/#HOSTNAME=.*/HOSTNAME='${{ inputs.name }}-arm'/" /etc/manjaro-arm-tools/manjaro-arm-tools.conf
-        # sudo sed -i "s/#HOSTNAME=.*/HOSTNAME='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/manjaro-arm-tools.conf
-        # sudo sed -i "s/#PASSWORD=.*/PASSWORD='${{ inputs.name }}-arm'/" /etc/manjaro-arm-tools/manjaro-arm-tools.conf
-        # sudo sed -i "s/#PASSWORD=.*/PASSWORD='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/manjaro-arm-tools.conf
+        # sudo sed -i "s/USER=.*/USER='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/functions.sh
         
-        sudo sed -i "s/USER=.*/USER='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/functions.sh
+        #Change Password
+        # sudo sed -i "s/#PASSWORD=.*/PASSWORD='${{ inputs.name }}'/" /etc/manjaro-arm-tools/manjaro-arm-tools.conf
+        # sudo sed -i "s/#PASSWORD=.*/PASSWORD='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/manjaro-arm-tools.conf
+        # sudo sed -i "s/PASSWORD=.*/PASSWORD='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/functions.sh
+        
+        #Change HostName
+        sudo sed -i "s/#HOSTNAME=.*/HOSTNAME='${{ inputs.name }}-arm'/" /etc/manjaro-arm-tools/manjaro-arm-tools.conf
+        sudo sed -i "s/#HOSTNAME=.*/HOSTNAME='${{ inputs.name }}-arm'/" /usr/share/manjaro-arm-tools/lib/manjaro-arm-tools.conf
         sudo sed -i "s/HOSTNAME=.*/HOSTNAME='${{ inputs.name }}-arm'/" /usr/share/manjaro-arm-tools/lib/functions.sh
-        sudo sed -i "s/PASSWORD=.*/PASSWORD='${{ inputs.name }}-arm'/" /usr/share/manjaro-arm-tools/lib/functions.sh
+        
+        #Change Image Name
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/bin/buildarmimg
         
+        #Disable Wayland for KDE Plasma
+        sudo sed -i 's/desq|kde-plasma|wayfire|sway/desq|wayfire|sway/' functions.sh
+        
+        #ParallelDownloads = 8
         sudo sed -i '/Architecture/{p;s/.*/ParallelDownloads = 8/;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
         # sudo sed -i 's/BOOT_MNJRO/BOOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh

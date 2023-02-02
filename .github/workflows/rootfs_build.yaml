@@ -145,9 +145,10 @@ jobs:
           
           FILE_PATH=$(find $IMGDIR -type f -name "*.tar.gz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
           sudo cp -v ${IMGDIR}/BigLinux-ARM-$ARCH-latest.tar.gz .
+          
           sudo chown $USER:$USER $FILE_PATH
           
-          ls -lasih
+          ls -lh
           
           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
           
@@ -163,7 +164,7 @@ jobs:
           files: |
             ${{ env.FILE_PATH }}
 
-      # - name: Tmate if failure
+      - name: Tmate if failure
       #   if: ${{ failure() }}
-      #   uses: mxschmitt/action-tmate@v3
+        uses: mxschmitt/action-tmate@v3
           

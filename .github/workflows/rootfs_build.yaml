@@ -137,9 +137,10 @@ jobs:
           pwd=$PWD
           
           #Compressing rootfs...
-          cd $BUILDDIR/$ARCH
+          pushd $BUILDDIR/$ARCH
           sudo tar -czf $IMGDIR/BigLinux-ARM-$ARCH-latest.tar.gz .
           sudo chmod 777 $IMGDIR/BigLinux-ARM-$ARCH-latest.tar.gz
+          popd
           
           ls -lasih $IMGDIR
           

@@ -196,6 +196,9 @@ runs:
         #Disable Wayland for KDE Plasma
         sudo sed -i 's/desq|kde-plasma|wayfire|sway/desq|wayfire|sway/' /usr/share/manjaro-arm-tools/lib/functions.sh
         
+        #gh release -R BigLinux-Package-Build/build-iso-arm download -p "*.tar.gz"
+        
+        
         #ParallelDownloads = 8
         sudo sed -i '/Architecture/{p;s/.*/ParallelDownloads = 8/;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         

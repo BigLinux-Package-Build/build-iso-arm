@@ -194,7 +194,7 @@ runs:
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/bin/buildarmimg
         
         #Disable Wayland for KDE Plasma
-        sudo sed -i 's/desq|kde-plasma|wayfire|sway/desq|wayfire|sway/' functions.sh
+        sudo sed -i 's/desq|kde-plasma|wayfire|sway/desq|wayfire|sway/' /usr/share/manjaro-arm-tools/lib/functions.sh
         
         #ParallelDownloads = 8
         sudo sed -i '/Architecture/{p;s/.*/ParallelDownloads = 8/;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64

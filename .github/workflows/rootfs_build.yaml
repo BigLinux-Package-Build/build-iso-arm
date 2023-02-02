@@ -134,21 +134,23 @@ jobs:
           
           cat $BUILDDIR/$ARCH/etc/motd
           
+          pwd=$PWD
+          
           #Compressing rootfs...
           cd $BUILDDIR/$ARCH
-          sudo tar -czf $IMGDIR/BigLinux-ARM-$ARCH-latest.tar.gz .
+          sudo tar -czf ${pwd}/BigLinux-ARM-$ARCH-latest.tar.gz .
           sudo rm -rf $BUILDDIR/$ARCH
           
           ls -lasih $IMGDIR
           
-          FILE_PATH=$(find $IMGDIR -type f -name "*.tar.gz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
-          sudo cp -v ${IMGDIR}/BigLinux-ARM-$ARCH-latest.tar.gz .
+          FILE_PATH=$(find -type f -name "*.tar.gz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
+          # sudo cp -v ${IMGDIR}/BigLinux-ARM-$ARCH-latest.tar.gz .
 
           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
           
-      # Tmate ##
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      # # Tmate ##
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
           
       - name: Release assets
         uses: softprops/action-gh-release@v0.1.15

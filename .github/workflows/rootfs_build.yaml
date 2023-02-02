@@ -116,10 +116,6 @@ jobs:
           
           sudo rm -r manjaro-arm-tools
           
-      # # Tmate ##
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
-          
       - name: build
         shell: bash
         run: |
@@ -146,9 +142,13 @@ jobs:
           ls -lasih $IMGDIR
           
           FILE_PATH=$(find /var/cache/manjaro-arm-tools/img -type f -name "*.tar.gz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
-          cp -v $FILE_PATH .
+          # cp -v $FILE_PATH .
 
           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
+          
+      # # Tmate ##
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
           
       - name: Release assets
         uses: softprops/action-gh-release@v0.1.15

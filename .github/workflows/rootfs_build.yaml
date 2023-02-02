@@ -12,6 +12,7 @@ jobs:
   release:
     runs-on: ubuntu-22.04
     steps:
+    ACTIONS_STEP_DEBUG: true
       - id: time
         uses: boredland/get-time-action@2.0.0
         with:
@@ -141,7 +142,7 @@ jobs:
           sudo tar -czf ${pwd}/BigLinux-ARM-$ARCH-latest.tar.gz .
           sudo rm -rf $BUILDDIR/$ARCH
           
-          ls -lasih $IMGDIR
+          ls -lasih #$IMGDIR
           
           FILE_PATH=$(find -type f -name "*.tar.gz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
           # sudo cp -v ${IMGDIR}/BigLinux-ARM-$ARCH-latest.tar.gz .

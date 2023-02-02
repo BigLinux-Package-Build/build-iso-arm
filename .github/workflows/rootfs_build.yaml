@@ -138,12 +138,12 @@ jobs:
           
           #Compressing rootfs...
           cd $BUILDDIR/$ARCH
-          sudo tar -czf ${pwd}/BigLinux-ARM-$ARCH-latest.tar.gz .
-          sudo rm -rf $BUILDDIR/$ARCH
+          sudo tar -czf $IMGDIR/BigLinux-ARM-$ARCH-latest.tar.gz .
+          sudo chmod 777 $IMGDIR/BigLinux-ARM-$ARCH-latest.tar.gz
           
-          ls -lasih #$IMGDIR
+          ls -lasih $IMGDIR
           
-          FILE_PATH=$(find -type f -name "*.tar.gz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
+          FILE_PATH=$(find $IMGDIR -type f -name "*.tar.gz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
           # sudo cp -v ${IMGDIR}/BigLinux-ARM-$ARCH-latest.tar.gz .
 
           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV

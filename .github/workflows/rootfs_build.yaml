@@ -12,13 +12,12 @@ jobs:
   release:
     runs-on: ubuntu-22.04
     steps:
-      - 
-        id: time
+      - id: time
         uses: boredland/get-time-action@2.0.0
         with:
           format: 'YYYY-MM-DD'
-      -  
-        name: install-build-dependencies
+          
+      - name: install-build-dependencies
         shell: bash
         run: |
           sudo apt-get update
@@ -45,8 +44,7 @@ jobs:
           sudo pip3 install meson
           sudo pip3 install ninja
           
-      -
-        name: install-pacman
+      - name: install-pacman
         shell: bash
         env:
           PACMAN_VERSION: 6.0.2
@@ -72,15 +70,14 @@ jobs:
             sudo mkdir -p /etc/pacman.d
             sudo touch /etc/pacman.d/mirrorlist
           popd
-      -
-        name: setup-qemu-binfmt
+          
+      - name: setup-qemu-binfmt
         shell: bash
         run: |
           sudo wget https://gitlab.manjaro.org/packages/community/manjaro-arm-qemu-static/-/raw/master/qemu-static.conf -O /usr/lib/binfmt.d/qemu-static.conf
           sudo service systemd-binfmt restart
           
-      - 
-        name: install-arch-install-scripts
+      - name: install-arch-install-scripts
         shell: bash
         env:
           VERSION: 28
@@ -90,8 +87,8 @@ jobs:
           sudo make -C arch-install-scripts-${VERSION}
           sudo make -C arch-install-scripts-${VERSION} check
           sudo make -C arch-install-scripts-${VERSION} PREFIX=/usr install
-      -
-        name: install-manjaro-arm-tools
+          
+      - name: install-manjaro-arm-tools
         shell: bash
         run: |
           sudo git clone https://gitlab.manjaro.org/manjaro-arm/applications/manjaro-arm-tools.git
@@ -110,9 +107,13 @@ jobs:
           
           sudo sed -i -e 's|1>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh   
           sudo sed -i -e 's|1> /dev/null 2>&1||g' /usr/share/manjaro-arm-tools/lib/functions.sh
-          sudo sed -i -e 's|2>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh 
-      -
-        name: build
+          sudo sed -i -e 's|2>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh
+          
+      # Tmate ##
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+          
+      - name: build
         shell: bash
         run: |
           sudo buildrootfs
@@ -123,8 +124,8 @@ jobs:
           cp -v $FILE_PATH .
 
           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
-      -
-        name: Release assets
+          
+      - name: Release assets
         uses: softprops/action-gh-release@v0.1.15
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -146,9 +146,9 @@ jobs:
 
           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
           
-      # # Tmate ##
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
+      # Tmate ##
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
           
       - name: Release assets
         uses: softprops/action-gh-release@v0.1.15

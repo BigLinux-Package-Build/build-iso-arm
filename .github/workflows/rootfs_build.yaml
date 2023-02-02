@@ -109,70 +109,60 @@ jobs:
           sudo sed -i -e 's|1> /dev/null 2>&1||g' /usr/share/manjaro-arm-tools/lib/functions.sh
           sudo sed -i -e 's|2>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh
           
-      # # Tmate ##
-      # - name: Setup tmate session
-      #   uses: mxschmitt/action-tmate@v3
+      # Tmate ##
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
           
       - name: build
         shell: bash
         run: |
           # sudo buildrootfs
           
-          su root
-          
           # Set globals
           LIBDIR=/usr/share/manjaro-arm-tools/lib
           ARCH="aarch64"
 
           # Import the library
-          source $LIBDIR/functions.sh 
-          enable_colors
-
-          # Check for root
-          check_root
-
-          # Check is the script already running
-          check_running
+          source $LIBDIR/functions.sh
 
           create_rootfs () {
               # Remove old rootfs if it exists
               if [ -d $BUILDDIR/$ARCH ]; then
                   echo "Removing old rootfs..."
-                  rm -rf $BUILDDIR/$ARCH
+                  sudo rm -rf $BUILDDIR/$ARCH
               fi
 
               # Perform basic rootfs initialization
               msg "Creating rootfs..."
-              mkdir -p $BUILDDIR/$ARCH/etc
-              ln -s ../usr/lib/os-release $BUILDDIR/$ARCH/etc/os-release
-              $LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman
+              sudo mkdir -p $BUILDDIR/$ARCH/etc
+              sudo ln -s ../usr/lib/os-release $BUILDDIR/$ARCH/etc/os-release
+              sudo $LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman
 
               # Enable cross-architecture chrooting
-              cp -a /usr/bin/qemu-aarch64-static $BUILDDIR/$ARCH/usr/bin
+              sudo cp -a /usr/bin/qemu-aarch64-static $BUILDDIR/$ARCH/usr/bin
               
               #BigLinux Changes
               echo 'Welcome to BigLinux ARM
               ~~Website:  https://www.biglinux.com.br
               ~~Forum:    https://forum.biglinux.com.br
-              ~~Telegram: https://t.me/BigLinuxCommunity' > $BUILDDIR/$ARCH/etc/motd
+              ~~Telegram: https://t.me/BigLinuxCommunity' | sudo tee $BUILDDIR/$ARCH/etc/motd
               
               # Fix SSL in the rootfs
-              $NSPAWN $BUILDDIR/$ARCH update-ca-trust
+              sudo $NSPAWN $BUILDDIR/$ARCH update-ca-trust
               
-              rm -f $BUILDDIR/$ARCH/var/cache/pacman/pkg/*
-              $NSPAWN $BUILDDIR/$ARCH pacman-mirrors -f5 > /dev/null 2>&1
+              sudo rm -f $BUILDDIR/$ARCH/var/cache/pacman/pkg/*
+              sudo $NSPAWN $BUILDDIR/$ARCH pacman-mirrors -f5 > /dev/null 2>&1
           }
 
           compress_rootfs () {
               msg "Compressing rootfs..."
               cd $BUILDDIR/$ARCH
-              tar -czf $IMGDIR/Manjaro-ARM-$ARCH-latest.tar.gz .
-              rm -rf $BUILDDIR/$ARCH
+              sudo tar -czf $IMGDIR/Manjaro-ARM-$ARCH-latest.tar.gz .
+              sudo rm -rf $BUILDDIR/$ARCH
           }
           
           create_rootfs
           compress_rootfs
-          exit
           
           ls -lasih /var/cache/manjaro-arm-tools/img
           

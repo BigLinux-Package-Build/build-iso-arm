@@ -71,11 +71,13 @@ jobs:
             sudo touch /etc/pacman.d/mirrorlist
           popd
           
+          sudo rm -r pacman
+          
       - name: setup-qemu-binfmt
         shell: bash
         run: |
           sudo wget https://gitlab.manjaro.org/packages/community/manjaro-arm-qemu-static/-/raw/master/qemu-static.conf -O /usr/lib/binfmt.d/qemu-static.conf
-          sudo service systemd-binfmt restart
+          sudo service systemd-binfmt restart 
           
       - name: install-arch-install-scripts
         shell: bash
@@ -87,6 +89,9 @@ jobs:
           sudo make -C arch-install-scripts-${VERSION}
           sudo make -C arch-install-scripts-${VERSION} check
           sudo make -C arch-install-scripts-${VERSION} PREFIX=/usr install
+          
+          sudo rm -r arch-install-scripts.tar.gz
+          sudo rm -r arch-install-scripts-${VERSION}
           
       - name: install-manjaro-arm-tools
         shell: bash
@@ -109,6 +114,8 @@ jobs:
           sudo sed -i -e 's|1> /dev/null 2>&1||g' /usr/share/manjaro-arm-tools/lib/functions.sh
           sudo sed -i -e 's|2>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh
           
+          sudo rm -r manjaro-arm-tools
+          
       # Tmate ##
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
@@ -118,21 +125,27 @@ jobs:
         run: |
           sudo sed -i ':a;$!{N;ba;};s/\(.*\)compress_rootfs/\1/' /usr/bin/buildrootfs
           sudo buildrootfs
-              
+          
+          ARCH='aarch64'
+          BUILDDIR='/var/lib/manjaro-arm-tools/pkg'
+          IMGDIR='/var/cache/manjaro-arm-tools/img'
+          
           #BigLinux Changes
           echo 'Welcome to BigLinux ARM
           ~~Website:  https://www.biglinux.com.br
           ~~Forum:    https://forum.biglinux.com.br
           ~~Telegram: https://t.me/BigLinuxCommunity' | sudo tee $BUILDDIR/$ARCH/etc/motd
           
+          cat $BUILDDIR/$ARCH/etc/motd
+          
           #Compressing rootfs...
           cd $BUILDDIR/$ARCH
           sudo tar -czf $IMGDIR/Manjaro-ARM-$ARCH-latest.tar.gz .
           sudo rm -rf $BUILDDIR/$ARCH
           
-          ls -lasih /var/cache/manjaro-arm-tools/img
+          ls -lasih $IMGDIR
           
-          FILE_PATH=$(find /var/cache/manjaro-arm-tools/img -type f -name "*.tar.gz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
+          FILE_PATH=$(find $IMGDIR -type f -name "*.tar.gz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
           cp -v $FILE_PATH .
 
           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV

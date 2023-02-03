@@ -196,8 +196,13 @@ runs:
         #Disable Wayland for KDE Plasma
         sudo sed -i 's/desq|kde-plasma|wayfire|sway/desq|wayfire|sway/' /usr/share/manjaro-arm-tools/lib/functions.sh
         
-        #gh release -R BigLinux-Package-Build/build-iso-arm download -p "*.tar.gz"
-        
+        #rootfs
+        #gh release -R BigLinux-Package-Build/build-iso-arm download $(gh release list -R BigLinux-Package-Build/build-iso-arm | grep rootfs | awk '{print $2}')
+        sed -i 's|wget -q --show-progress --progress=bar:force:noscroll \\||' /usr/share/manjaro-arm-tools/lib/functions.sh
+        sed -i 's|https://github.com/manjaro-arm/rootfs.*||' /usr/share/manjaro-arm-tools/lib/functions.sh
+        sed -i 's/-O "$ROOTFS_IMG\/Manjaro-ARM-$ARCH-latest.tar.gz".*/gh release -R BigLinux-Package-Build\/build-iso-arm download $(gh release list -R BigLinux-Package-Build\/build-iso-arm | grep rootfs | awk '"'{print $2}'"')/' /usr/share/manjaro-arm-tools/lib/functions.sh
+        sed -i '/bsdtar -xpf/s/Manjaro/BigLinux/' /usr/share/manjaro-arm-tools/lib/functions.sh
+        sed -i 's/Manjaro-ARM-$ARCH-latest.tar.gz/BigLinux-ARM-aarch64-latest.tar.gz/' /usr/share/manjaro-arm-tools/lib/functions.sh
         
         #ParallelDownloads = 8
         sudo sed -i '/Architecture/{p;s/.*/ParallelDownloads = 8/;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64

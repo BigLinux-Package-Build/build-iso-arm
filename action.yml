@@ -242,9 +242,9 @@ runs:
         #Checkout ARM Profiles
         sudo git clone --depth 1 ${REPO} arm-profiles
         
-    # # Tmate ##
-    # - name: Setup TMATE Session
-    #   uses: mxschmitt/action-tmate@v3
+    # Tmate ##
+    - name: Setup TMATE Session
+      uses: mxschmitt/action-tmate@v3
         
     - id: build
       shell: bash

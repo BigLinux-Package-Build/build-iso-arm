@@ -35,7 +35,7 @@ jobs:
         run: |
           echo "name=$(echo ${{ matrix.img-name }} | sed -e 's/\(.*\)/\L\1/')" >> $GITHUB_OUTPUT
           echo ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
-          echo "${{ inputs.debug_enabled }}"
+          echo "Tmate = ${{ inputs.debug_enabled }}"
           
       - id: image-build
         name: Image Build

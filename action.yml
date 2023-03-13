@@ -252,7 +252,7 @@ runs:
     #   uses: mxschmitt/action-tmate@v3
         
     - id: build
-      if: ${{ inputs.type == package }}
+      if: ${{ inputs.type }} = 'package'
       shell: bash
       env:
         DEVICE: ${{ inputs.device }}

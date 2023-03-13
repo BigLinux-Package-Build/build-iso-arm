@@ -383,6 +383,7 @@ runs:
         for p in $(find $PWD -maxdepth 1 -regex '.*\.pkg\.tar\.\(xz\|zst\)'); do
           gpg --pinentry-mode loopback --passphrase "${{ inputs.gpg-passphrase }}" --detach-sign ${p}
         done
+        
     - name: CheckSum
       if: "${{ inputs.type == 'package' }}"
       shell: bash -O extglob {0}

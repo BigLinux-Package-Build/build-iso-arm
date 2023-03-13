@@ -27,7 +27,7 @@ jobs:
         shell: bash
         run: |
           sudo apt-get update
-          sudo apt install \
+          sudo apt-fast install -y \
             gdisk \
             zip \
             systemd-container \

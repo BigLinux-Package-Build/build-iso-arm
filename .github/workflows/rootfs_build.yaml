@@ -135,13 +135,13 @@ jobs:
           # [biglinux-testing]
           # # SigLevel = PackageRequired
           # SigLevel = Optional TrustAll
-          # Server = https://repo.biglinux.com.br/testing/$arch' | tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+          # Server = https://repo.biglinux.com.br/testing/$arch' | sudo tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
           echo '
           [biglinux-stable]
           # SigLevel = PackageRequired
           SigLevel = Optional TrustAll
-          Server = https://repo.biglinux.com.br/stable/$arch' | tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+          Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
           
                 
       - name: Tmate

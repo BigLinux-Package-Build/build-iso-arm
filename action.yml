@@ -35,6 +35,10 @@ inputs:
     description: 'image type: normal (default), factory'
     required: false
     default: normal
+  type:
+    description: 'type: package or .img'
+    required: true
+    
 #  CI_PUB_KEY:
 #    description: 'public gpg key to use'
 #    required: true
@@ -235,6 +239,7 @@ runs:
     #     ${{ inputs.img-name }}
     
     - name: checkout-arm-profiles
+      if: ${{ inputs.type == package }}
       shell: bash
       env:
         REPO: ${{ inputs.arm-profiles-repo }}
@@ -242,11 +247,12 @@ runs:
         #Checkout ARM Profiles
         sudo git clone --depth 1 ${REPO} arm-profiles
         
-    # Tmate ##
-    - name: Setup TMATE Session
-      uses: mxschmitt/action-tmate@v3
+    # # Tmate ##
+    # - name: Setup TMATE Session
+    #   uses: mxschmitt/action-tmate@v3
         
     - id: build
+      if: ${{ inputs.type == package }}
       shell: bash
       env:
         DEVICE: ${{ inputs.device }}

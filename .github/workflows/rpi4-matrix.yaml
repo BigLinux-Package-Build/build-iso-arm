@@ -35,6 +35,7 @@ jobs:
         run: |
           echo "name=$(echo ${{ matrix.img-name }} | sed -e 's/\(.*\)/\L\1/')" >> $GITHUB_OUTPUT
           echo ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
+          echo "${{ debug_enabled }}"
           
       - id: image-build
         name: Image Build
@@ -47,8 +48,8 @@ jobs:
           branch: ${{ matrix.branch }}
           version: ${{ steps.time.outputs.time }}
           type: image
-          tmate: ${{ github.event_name }}
-          # if: ${{ github.event_name }}== 'workflow_dispatch' && inputs.debug_enabled }}
+          tmate: ${{ inputs.debug_enabled }}
+          # if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
           # overlay-repo: https://repo.biglinux.com.br/stable/$arch/biglinux-stable.db
           #gpg-key: ${{ secrets.CI_GPG_SECRET }}
           #gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}

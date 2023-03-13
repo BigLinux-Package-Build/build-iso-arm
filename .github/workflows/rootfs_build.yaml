@@ -128,20 +128,20 @@ jobs:
           #add biglinux repo
           # sudo sed -i '/\[core\]/{h;s/.*/\[biglinux-update-stable\]/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
           # sudo sed -i '/\[core\]/{h;s/.*/SigLevel = PackageRequired/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
-          # sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/$arch/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+          # sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/aarch64/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
           # sudo sed -i '/\[core\]/{h;s/.*//;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
           echo '
           # [biglinux-testing]
           # # SigLevel = PackageRequired
           # SigLevel = Optional TrustAll
-          # Server = https://repo.biglinux.com.br/testing/$arch' | sudo tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+          # Server = https://repo.biglinux.com.br/testing/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
           echo '
           [biglinux-stable]
           # SigLevel = PackageRequired
           SigLevel = Optional TrustAll
-          Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+          Server = https://repo.biglinux.com.br/stable/aarch64' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
           
                 
       - name: Tmate
@@ -151,20 +151,45 @@ jobs:
       - name: build
         shell: bash
         run: |
+          ### add outros pacotes ###
+          #editar arquivo /usr/bin/buildrootfs
+          #edicionar mais pacotes na linha:
+          #$LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman 
+          
+          #remover compress e gerar rootfs
           sudo sed -i ':a;$!{N;ba;};s/\(.*\)compress_rootfs/\1/' /usr/bin/buildrootfs
           sudo buildrootfs
           
+          #declarar variaveis
           ARCH='aarch64'
           BUILDDIR='/var/lib/manjaro-arm-tools/pkg'
           IMGDIR='/var/cache/manjaro-arm-tools/img'
           
-          #BigLinux Changes
+          ### BigLinux Changes ###
+          #trocar nome no login
           echo 'Welcome to BigLinux ARM
           ~~Website:  https://www.biglinux.com.br
           ~~Forum:    https://forum.biglinux.com.br
           ~~Telegram: https://t.me/BigLinuxCommunity' | sudo tee $BUILDDIR/$ARCH/etc/motd
           
           cat $BUILDDIR/$ARCH/etc/motd
+          
+          #add biglinux repo
+          # sudo sed -i '/\[core\]/{h;s/.*/\[biglinux-update-stable\]/;p;x;}' $BUILDDIR/$ARCH/etc/pacman.conf
+          # sudo sed -i '/\[core\]/{h;s/.*/SigLevel = PackageRequired/;p;x;}' $BUILDDIR/$ARCH/etc/pacman.conf
+          # sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/aarch64/;p;x;}' $BUILDDIR/$ARCH/etc/pacman.conf
+          # sudo sed -i '/\[core\]/{h;s/.*//;p;x;}' $BUILDDIR/$ARCH/etc/pacman.conf
+          echo '
+          # [biglinux-testing]
+          # # SigLevel = PackageRequired
+          # SigLevel = Optional TrustAll
+          # Server = https://repo.biglinux.com.br/testing/$arch' | sudo tee -a $BUILDDIR/$ARCH/etc/pacman.conf
+          echo '
+          [biglinux-stable]
+          # SigLevel = PackageRequired
+          SigLevel = Optional TrustAll
+          Server = https://repo.biglinux.com.br/stable/aarch64' | sudo tee -a $BUILDDIR/$ARCH/etc/pacman.conf
+          
           
           pwd=$PWD
           

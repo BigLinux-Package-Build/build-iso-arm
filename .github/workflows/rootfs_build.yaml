@@ -1,6 +1,12 @@
 name: rootfs_build
 on:
   workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'with TMATE'
+        required: false
+        default: false
   # schedule:
   #   - cron:  '30 1 * * 1'
 
@@ -115,6 +121,10 @@ jobs:
           sudo sed -i -e 's|2>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh
           
           sudo rm -r manjaro-arm-tools
+                
+      - name: Tmate if failure
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
           
       - name: build
         shell: bash
@@ -163,7 +173,4 @@ jobs:
           files: |
             ${{ env.FILE_PATH }}
             
-      # - name: Tmate if failure
-      #   if: ${{ failure() }}
-      #   uses: mxschmitt/action-tmate@v3
           

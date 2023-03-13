@@ -242,6 +242,25 @@ runs:
         #ParallelDownloads = 8
         sudo sed -i '/Architecture/{p;s/.*/ParallelDownloads = 8/;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
+        #add biglinux repo
+        sudo sed -i '/\[core\]/{h;s/.*/\[biglinux-update-stable\]/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        sudo sed -i '/\[core\]/{h;s/.*/SigLevel = PackageRequired/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/$arch/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        sudo sed -i '/\[core\]/{h;s/.*//;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        
+        if [ "${{ inputs.gitbranch }}" = "testing" ];then
+        echo '
+        [biglinux-testing]
+        SigLevel = PackageRequired
+        Server = https://repo.biglinux.com.br/testing/$arch' | tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        fi
+        
+        echo '
+        [biglinux-stable]
+        SigLevel = PackageRequired
+        Server = https://repo.biglinux.com.br/stable/$arch' | tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        
+        
         # sudo sed -i 's/BOOT_MNJRO/BOOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh
         # sudo sed -i 's/ROOT_MNJRO/ROOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh
     

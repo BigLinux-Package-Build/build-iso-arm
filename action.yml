@@ -239,7 +239,7 @@ runs:
     #     ${{ inputs.img-name }}
     
     - name: checkout-arm-profiles
-      if: "${{ inputs.type == 'package' }}"
+      if: "${{ inputs.type == 'image' }}"
       shell: bash
       env:
         REPO: ${{ inputs.arm-profiles-repo }}
@@ -247,12 +247,21 @@ runs:
         #Checkout ARM Profiles
         sudo git clone --depth 1 ${REPO} arm-profiles
         
+    - name: checkout-arm-package
+      if: "${{ inputs.type == 'image' }}"
+      shell: bash
+      env:
+        REPO: ${{ inputs.arm-package }}
+      run: |
+        #Checkout ARM Package
+        sudo git clone --depth 1 ${REPO} package
+        
     # # Tmate ##
     # - name: Setup TMATE Session
     #   uses: mxschmitt/action-tmate@v3
         
     - id: build
-      if: "${{ inputs.type == 'package' }}"
+      if: "${{ inputs.type == 'image' }}"
       shell: bash
       env:
         DEVICE: ${{ inputs.device }}
@@ -334,6 +343,40 @@ runs:
         echo "file-pkg=$(basename $FILE_PKG)" >> $GITHUB_OUTPUT
         echo "FILE_PKG=$(basename $FILE_PKG)" >> $GITHUB_ENV
         
+        
+    - id: build-package
+      if: "${{ inputs.type == 'package' }}"
+      shell: bash
+      run: |
+        gitfolder=$(find -type f -name PKGBUILD | sed 's/PKGBUILD//')
+        cd $gitfolder
+        
+        sudo buildarmpkg -p . -b ${{ inputs.branch }}
+        
+    - name: sign package
+      shell: bash -O extglob {0}
+      run: |
+        # "Assinar Pacote"
+        cat <(echo -e "${{ inputs.gpg-key }}") | gpg --batch --import &>/dev/null
+        gitfolder=$(find -type f -name PKGBUILD | sed 's/PKGBUILD//')
+        cd $gitfolder
+        for p in $(find $PWD -maxdepth 1 -regex '.*\.pkg\.tar\.\(xz\|zst\)'); do
+          gpg --pinentry-mode loopback --passphrase "${{ inputs.gpg-passphrase }}" --detach-sign ${p}
+        done
+    - name: CheckSum
+      shell: bash -O extglob {0}
+      run: |
+        # "Checksum"
+        gitfolder=$(find -type f -name PKGBUILD | sed 's/PKGBUILD//')
+        cd $gitfolder
+        echo '#!/bin/bash
+        for i in $(ls *.zst); do md5sum $i >> $i.md5; done
+        for i in $(ls *.sig | sed 's/.sig//'); do md5sum $i.sig >> $i.md5; done
+        exit 0' > md5.sh
+        bash md5.sh
+        
+        ls -lha
+      
 #    - id: gpg_sign
 #      shell: bash
 #      run: |

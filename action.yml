@@ -239,7 +239,7 @@ runs:
     #     ${{ inputs.img-name }}
     
     - name: checkout-arm-profiles
-      if: ${{ inputs.type == package }}
+      if: ${{ inputs.type }} = 'package'
       shell: bash
       env:
         REPO: ${{ inputs.arm-profiles-repo }}

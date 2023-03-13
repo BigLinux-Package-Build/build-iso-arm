@@ -41,6 +41,12 @@ inputs:
   type:
     description: 'type: package or .img'
     required: true
+  gpg-key:
+    descriptio: 'gpg signing key'
+    required: true
+  gpg-passphrase:
+    description: 'gpg passphrase'
+    required: true
     
 #  CI_PUB_KEY:
 #    description: 'public gpg key to use'
@@ -106,6 +112,8 @@ runs:
         # For generic-efi support
         wget http://ports.ubuntu.com/pool/main/g/grub2-unsigned/grub-efi-arm64-bin_2.06-2ubuntu10_arm64.deb
         sudo dpkg -x grub-efi-arm64-bin_2.06-2ubuntu10_arm64.deb /
+        
+        sudo rm -r grub-efi-arm64-bin_2.06-2ubuntu10_arm64.deb
           
     - id: install-pacman
       shell: bash
@@ -135,6 +143,8 @@ runs:
           sudo touch /etc/pacman.d/mirrorlist
         popd
         
+        sudo rm -r pacman
+        
     - name: setup-qemu-binfmt
       shell: bash
       run: |
@@ -153,6 +163,9 @@ runs:
         sudo make -C arch-install-scripts-${VERSION}
         sudo make -C arch-install-scripts-${VERSION} check
         sudo make -C arch-install-scripts-${VERSION} PREFIX=/usr install
+        
+        sudo rm arch-install-scripts.tar.gz
+        sudo rm -r arch-install-scripts-${VERSION}
         
     - name: install-manjaro-arm-tools
       shell: bash
@@ -176,7 +189,10 @@ runs:
         sudo sed -i -e 's|1> /dev/null 2>&1||g' /usr/share/manjaro-arm-tools/lib/functions.sh
         sudo sed -i -e 's|2>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh
         
+        sudo rm -r manjaro-arm-tools
+        
     - name: BigLinux Changes
+      if: "${{ inputs.type == 'image' }}"
       shell: bash
       run: |
         #BigLinux Changes
@@ -251,7 +267,7 @@ runs:
         sudo git clone --depth 1 ${REPO} arm-profiles
         
     - name: checkout-arm-package
-      if: "${{ inputs.type == 'image' }}"
+      if: "${{ inputs.type == 'package' }}"
       shell: bash
       env:
         REPO: ${{ inputs.arm-package }}
@@ -357,6 +373,7 @@ runs:
         sudo buildarmpkg -p . -b ${{ inputs.branch }}
         
     - name: sign package
+      if: "${{ inputs.type == 'package' }}"
       shell: bash -O extglob {0}
       run: |
         # "Assinar Pacote"
@@ -367,6 +384,7 @@ runs:
           gpg --pinentry-mode loopback --passphrase "${{ inputs.gpg-passphrase }}" --detach-sign ${p}
         done
     - name: CheckSum
+      if: "${{ inputs.type == 'package' }}"
       shell: bash -O extglob {0}
       run: |
         # "Checksum"

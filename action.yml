@@ -281,7 +281,7 @@ runs:
     # Tmate ##
     - name: Setup TMATE Session
       uses: mxschmitt/action-tmate@v3
-      if: "${{ inputs.tmate == 'debug_enabled' }}"
+      if: "${{ inputs.tmate == 'true' }}"
         
     - id: build
       if: "${{ inputs.type == 'image' }}"

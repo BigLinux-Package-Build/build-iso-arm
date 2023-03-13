@@ -23,6 +23,9 @@ inputs:
     description: 'stable (default), testing, unstable'
     required: false
     default: stable
+  gitbranch:
+    description: 'bigBranch to buld package'
+    required: false
   version:
     description: 'image version'
     required: false

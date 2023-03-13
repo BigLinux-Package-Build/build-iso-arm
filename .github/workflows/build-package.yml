@@ -3,9 +3,9 @@ name: Build ARM Package
 on:
   repository_dispatch:
     types:
-      - ARM/*
-      # - AUR/*
-      # - xivastudio/*
+      - biglinux/*
+      - AUR/*
+      - xivastudio/*
 
 jobs:
   build:

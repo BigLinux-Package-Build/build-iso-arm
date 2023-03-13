@@ -253,14 +253,14 @@ runs:
         [biglinux-testing]
         # SigLevel = PackageRequired
         SigLevel = Optional TrustAll
-        Server = https://repo.biglinux.com.br/testing/$arch' | tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        Server = https://repo.biglinux.com.br/testing/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         fi
         
         echo '
         [biglinux-stable]
         # SigLevel = PackageRequired
         SigLevel = Optional TrustAll
-        Server = https://repo.biglinux.com.br/stable/aarch64' | tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        Server = https://repo.biglinux.com.br/stable/aarch64' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
         
         # sudo sed -i 's/BOOT_MNJRO/BOOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh

@@ -200,7 +200,7 @@ runs:
       run: |
         #BigLinux Changes
         
-        echo #Change User
+        echo "#Change User"
         # sudo sed -i "s/#USER=.*/USER='${{ inputs.name }}'/" /etc/manjaro-arm-tools/manjaro-arm-tools.conf
         # sudo sed -i "s/#USER=.*/USER='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/manjaro-arm-tools.conf
         # sudo sed -i "s/USER=.*/USER='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/functions.sh
@@ -265,21 +265,21 @@ runs:
         
         # sudo sed -i 's/BOOT_MNJRO/BOOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh
         # sudo sed -i 's/ROOT_MNJRO/ROOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh
-    
-    #     sudo sed -i "/--populate/s/manjaro-arm/manjaro-arm ${{ inputs.name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
-    #     sudo sed -i 's/Optional TrustAll/PackageRequired/' /usr/share/manjaro-arm-tools/lib/functions.sh
-    #     sudo sed -i "/menuentry/s/Manjaro/${{ inputs.img-name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
-    
-    #     sudo sed -i '/zstd/s/-10/-3/' /usr/share/manjaro-arm-tools/lib/functions.sh
-    
-    #     ALERT
-    #     Verficar linha 323 /usr/share/manjaro-arm-tools/lib/functions.sh
-    #     OEM linha 509 /usr/share/manjaro-arm-tools/lib/functions.sh
-    #     minimal/server linha 460 /usr/share/manjaro-arm-tools/lib/functions.sh
-    #     
-    #      
-    #     ${{ inputs.name }}
-    #     ${{ inputs.img-name }}
+        #
+        # sudo sed -i "/--populate/s/manjaro-arm/manjaro-arm ${{ inputs.name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
+        # sudo sed -i 's/Optional TrustAll/PackageRequired/' /usr/share/manjaro-arm-tools/lib/functions.sh
+        # sudo sed -i "/menuentry/s/Manjaro/${{ inputs.img-name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
+        #
+        # sudo sed -i '/zstd/s/-10/-3/' /usr/share/manjaro-arm-tools/lib/functions.sh
+        #
+        # ALERT
+        # Verficar linha 323 /usr/share/manjaro-arm-tools/lib/functions.sh
+        # OEM linha 509 /usr/share/manjaro-arm-tools/lib/functions.sh
+        # minimal/server linha 460 /usr/share/manjaro-arm-tools/lib/functions.sh
+        #
+        # 
+        # ${{ inputs.name }}
+        # ${{ inputs.img-name }}
     
     - name: checkout-arm-profiles
       if: "${{ inputs.type == 'image' }}"

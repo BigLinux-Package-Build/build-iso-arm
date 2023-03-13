@@ -273,7 +273,7 @@ runs:
         REPO: ${{ inputs.arm-package }}
       run: |
         #Checkout ARM Package
-        sudo git clone --depth 1 ${REPO} package
+        sudo git clone ${{ github.event.client_payload.url }}
         
     # # Tmate ##
     # - name: Setup TMATE Session

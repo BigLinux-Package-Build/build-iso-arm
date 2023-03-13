@@ -47,6 +47,9 @@ inputs:
   gpg-passphrase:
     description: 'gpg passphrase'
     required: true
+  tmate:
+    description: 'run tmate'
+    required: false
     
 #  CI_PUB_KEY:
 #    description: 'public gpg key to use'
@@ -275,9 +278,10 @@ runs:
         #Checkout ARM Package
         git clone ${{ github.event.client_payload.url }}
         
-    # # Tmate ##
-    # - name: Setup TMATE Session
-    #   uses: mxschmitt/action-tmate@v3
+    # Tmate ##
+    - name: Setup TMATE Session
+      uses: mxschmitt/action-tmate@v3
+      if: "${{ inputs.tmate == 'true' }}"
         
     - id: build
       if: "${{ inputs.type == 'image' }}"

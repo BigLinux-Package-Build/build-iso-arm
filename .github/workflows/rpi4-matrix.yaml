@@ -1,6 +1,12 @@
 name: Rasp 3/4 Matrix
 on:
   workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'with TMATE'
+        required: false
+        default: false
 
 concurrency:
   group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
@@ -14,7 +20,7 @@ jobs:
         IMG-NAME: [BigLinux]
         DEVICE: [rpi4]
         # EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
-        EDITION: [kde-plasma,minimal]
+        EDITION: [kde-plasma,minimal,iot]
         BRANCH: [stable]
     steps:
       - id: time
@@ -41,6 +47,8 @@ jobs:
           branch: ${{ matrix.branch }}
           version: ${{ steps.time.outputs.time }}
           type: image
+          tmate: true
+            if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
           # overlay-repo: https://repo.biglinux.com.br/stable/$arch/biglinux-stable.db
           #gpg-key: ${{ secrets.CI_GPG_SECRET }}
           #gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}

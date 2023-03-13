@@ -223,7 +223,7 @@ runs:
         sudo sed -i 's/desq|kde-plasma|wayfire|sway/desq|wayfire|sway/' /usr/share/manjaro-arm-tools/lib/functions.sh
         
         echo "#rootfs"
-        #gh release -R BigLinux-Package-Build/build-iso-arm download $(gh release list -R BigLinux-Package-Build/build-iso-arm | grep rootfs | awk '{print $2}')
+        #gh release -R BigLinux-Package-Build/build-iso-arm download $(gh release list -R BigLinux-Package-Build/build-iso-arm | grep rootfs | awk '{print $2}' | head -n1)
         
         echo ${{ github.token }} | gh auth login --with-token
         sed -i 's|wget -q --show-progress --progress=bar:force:noscroll \\||' /usr/share/manjaro-arm-tools/lib/functions.sh
@@ -232,7 +232,7 @@ runs:
         
         cat /usr/share/manjaro-arm-tools/lib/functions.sh | grep BigLinux-ARM
         
-        gh release -R BigLinux-Package-Build/build-iso-arm download $(gh release list -R BigLinux-Package-Build/build-iso-arm | grep rootfs | awk '{print $2}')
+        gh release -R BigLinux-Package-Build/build-iso-arm download $(gh release list -R BigLinux-Package-Build/build-iso-arm | grep rootfs | awk '{print $2}' | head -n1)
         cp BigLinux-ARM-aarch64-latest.tar.gz /var/lib/manjaro-arm-tools/img
         
         

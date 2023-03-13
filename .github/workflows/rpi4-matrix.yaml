@@ -40,7 +40,7 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           version: ${{ steps.time.outputs.time }}
-          type: package
+          type: image
           # overlay-repo: https://repo.biglinux.com.br/stable/$arch/biglinux-stable.db
           #gpg-key: ${{ secrets.CI_GPG_SECRET }}
           #gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}

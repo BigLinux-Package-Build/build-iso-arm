@@ -84,7 +84,7 @@ runs:
       run: |
         #Install Build Dependencies
         sudo apt-get update
-        sudo apt install \
+        sudo apt-fast install -y \
           gdisk \
           zip \
           systemd-container \
@@ -200,29 +200,29 @@ runs:
       run: |
         #BigLinux Changes
         
-        #Change User
+        echo #Change User
         # sudo sed -i "s/#USER=.*/USER='${{ inputs.name }}'/" /etc/manjaro-arm-tools/manjaro-arm-tools.conf
         # sudo sed -i "s/#USER=.*/USER='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/manjaro-arm-tools.conf
         # sudo sed -i "s/USER=.*/USER='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/functions.sh
         
-        #Change Password
+        echo #Change Password
         # sudo sed -i "s/#PASSWORD=.*/PASSWORD='${{ inputs.name }}'/" /etc/manjaro-arm-tools/manjaro-arm-tools.conf
         # sudo sed -i "s/#PASSWORD=.*/PASSWORD='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/manjaro-arm-tools.conf
         # sudo sed -i "s/PASSWORD=.*/PASSWORD='${{ inputs.name }}'/" /usr/share/manjaro-arm-tools/lib/functions.sh
         
-        #Change HostName
+        echo #Change HostName
         sudo sed -i "s/#HOSTNAME=.*/HOSTNAME='${{ inputs.name }}-arm'/" /etc/manjaro-arm-tools/manjaro-arm-tools.conf
         sudo sed -i "s/#HOSTNAME=.*/HOSTNAME='${{ inputs.name }}-arm'/" /usr/share/manjaro-arm-tools/lib/manjaro-arm-tools.conf
         sudo sed -i "s/HOSTNAME=.*/HOSTNAME='${{ inputs.name }}-arm'/" /usr/share/manjaro-arm-tools/lib/functions.sh
         
-        #Change Image Name
+        echo #Change Image Name
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
         sudo sed -i "/IMGNAME=/s/Manjaro/${{ inputs.img-name }}/" /usr/bin/buildarmimg
         
-        #Disable Wayland for KDE Plasma
+        echo #Disable Wayland for KDE Plasma
         sudo sed -i 's/desq|kde-plasma|wayfire|sway/desq|wayfire|sway/' /usr/share/manjaro-arm-tools/lib/functions.sh
         
-        #rootfs
+        echo #rootfs
         #gh release -R BigLinux-Package-Build/build-iso-arm download $(gh release list -R BigLinux-Package-Build/build-iso-arm | grep rootfs | awk '{print $2}')
         
         echo ${{ github.token }} | gh auth login --with-token
@@ -239,10 +239,10 @@ runs:
         sed -i '/bsdtar -xpf/s/Manjaro/BigLinux/' /usr/share/manjaro-arm-tools/lib/functions.sh
         sed -i 's/Manjaro-ARM-$ARCH-latest.tar.gz/BigLinux-ARM-aarch64-latest.tar.gz/' /usr/share/manjaro-arm-tools/lib/functions.sh
         
-        #ParallelDownloads = 8
+        echo #ParallelDownloads = 8
         sudo sed -i '/Architecture/{p;s/.*/ParallelDownloads = 8/;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
-        #add biglinux repo
+        echo #add biglinux repo
         # sudo sed -i '/\[core\]/{h;s/.*/\[biglinux-update-stable\]/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         # sudo sed -i '/\[core\]/{h;s/.*/SigLevel = PackageRequired/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         # sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/aarch64/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
@@ -250,10 +250,10 @@ runs:
         
         if [ "${{ inputs.gitbranch }}" = "testing" ];then
         echo '
-        # [biglinux-testing]
-        # # SigLevel = PackageRequired
-        # SigLevel = Optional TrustAll
-        # Server = https://repo.biglinux.com.br/testing/$arch' | tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        [biglinux-testing]
+        # SigLevel = PackageRequired
+        SigLevel = Optional TrustAll
+        Server = https://repo.biglinux.com.br/testing/$arch' | tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         fi
         
         echo '

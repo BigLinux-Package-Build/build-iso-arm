@@ -281,7 +281,7 @@ runs:
     # Tmate ##
     - name: Setup TMATE Session
       uses: mxschmitt/action-tmate@v3
-      if: "${{ inputs.tmate == 'true' }}"
+      if: "${{ inputs.tmate == 'workflow_dispatch' }}"
         
     - id: build
       if: "${{ inputs.type == 'image' }}"

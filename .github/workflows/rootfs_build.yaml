@@ -79,27 +79,6 @@ jobs:
           
           sudo rm -r pacman
           
-      - name: add-repo
-        shell: bash
-        run: |    
-          #add biglinux repo
-          # sudo sed -i '/\[core\]/{h;s/.*/\[biglinux-update-stable\]/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
-          # sudo sed -i '/\[core\]/{h;s/.*/SigLevel = PackageRequired/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
-          # sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/$arch/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
-          # sudo sed -i '/\[core\]/{h;s/.*//;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
-        
-          echo '
-          # [biglinux-testing]
-          # # SigLevel = PackageRequired
-          # SigLevel = Optional TrustAll
-          # Server = https://repo.biglinux.com.br/testing/$arch' | tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
-        
-          echo '
-          [biglinux-stable]
-          # SigLevel = PackageRequired
-          SigLevel = Optional TrustAll
-          Server = https://repo.biglinux.com.br/stable/$arch' | tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
-          
       - name: setup-qemu-binfmt
         shell: bash
         run: |
@@ -142,6 +121,28 @@ jobs:
           sudo sed -i -e 's|2>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh
           
           sudo rm -r manjaro-arm-tools
+          
+      - name: add-repo
+        shell: bash
+        run: |    
+          #add biglinux repo
+          # sudo sed -i '/\[core\]/{h;s/.*/\[biglinux-update-stable\]/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+          # sudo sed -i '/\[core\]/{h;s/.*/SigLevel = PackageRequired/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+          # sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/$arch/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+          # sudo sed -i '/\[core\]/{h;s/.*//;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        
+          echo '
+          # [biglinux-testing]
+          # # SigLevel = PackageRequired
+          # SigLevel = Optional TrustAll
+          # Server = https://repo.biglinux.com.br/testing/$arch' | tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        
+          echo '
+          [biglinux-stable]
+          # SigLevel = PackageRequired
+          SigLevel = Optional TrustAll
+          Server = https://repo.biglinux.com.br/stable/$arch' | tee -a sudo /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+          
                 
       - name: Tmate
         uses: mxschmitt/action-tmate@v3

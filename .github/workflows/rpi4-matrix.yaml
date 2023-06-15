@@ -18,9 +18,9 @@ jobs:
     strategy:
       matrix:
         IMG-NAME: [BigLinux]
-        DEVICE: [rpi4]
+        DEVICE: [rpi4,generic]
         # EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
-        EDITION: [kde-plasma,minimal,iot,generic]
+        EDITION: [kde-plasma,minimal,iot]
         BRANCH: [stable]
     steps:
       - id: time

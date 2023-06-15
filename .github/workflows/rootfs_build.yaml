@@ -7,8 +7,8 @@ on:
         description: 'with TMATE'
         required: false
         default: false
-  # schedule:
-  #   - cron:  '30 1 * * 1'
+  schedule:
+    - cron:  '30 19 * * 5'
 
 concurrency:
   group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
@@ -135,7 +135,7 @@ jobs:
           # [biglinux-testing]
           # # SigLevel = PackageRequired
           # SigLevel = Optional TrustAll
-          # Server = https://repo.biglinux.com.br/testing/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+          # Server = https://repo.biglinux.com.br/testing/aarch64' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
           echo '
           [biglinux-stable]
@@ -177,7 +177,7 @@ jobs:
           #add biglinux repo
           # sudo sed -i '/\[core\]/{h;s/.*/\[biglinux-update-stable\]/;p;x;}' $BUILDDIR/$ARCH/etc/pacman.conf
           # sudo sed -i '/\[core\]/{h;s/.*/SigLevel = PackageRequired/;p;x;}' $BUILDDIR/$ARCH/etc/pacman.conf
-          # sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/aarch64/;p;x;}' $BUILDDIR/$ARCH/etc/pacman.conf
+          # sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/$arch/;p;x;}' $BUILDDIR/$ARCH/etc/pacman.conf
           # sudo sed -i '/\[core\]/{h;s/.*//;p;x;}' $BUILDDIR/$ARCH/etc/pacman.conf
           echo '
           # [biglinux-testing]
@@ -188,7 +188,7 @@ jobs:
           [biglinux-stable]
           # SigLevel = PackageRequired
           SigLevel = Optional TrustAll
-          Server = https://repo.biglinux.com.br/stable/aarch64' | sudo tee -a $BUILDDIR/$ARCH/etc/pacman.conf
+          Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a $BUILDDIR/$ARCH/etc/pacman.conf
           
           
           pwd=$PWD

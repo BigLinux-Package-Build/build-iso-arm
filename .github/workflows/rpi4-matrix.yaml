@@ -20,6 +20,7 @@ jobs:
         IMG-NAME: [BigLinux]
         DEVICE: [rpi4,generic]
         # EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
+        # EDITION: [kde-plasma,minimal,iot]
         EDITION: [kde-plasma,minimal,iot]
         BRANCH: [stable]
     steps:

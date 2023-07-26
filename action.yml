@@ -250,27 +250,26 @@ runs:
         
         if [ "${{ inputs.bigbranch }}" = "development" ];then
         echo '
-        [biglinux-stable]
-        # SigLevel = PackageRequired
-        SigLevel = Optional TrustAll
-        Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
-        
-        echo '
         [biglinux-testing]
         # SigLevel = PackageRequired
         SigLevel = Optional TrustAll
         Server = https://repo.biglinux.com.br/testing/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
-        #copy pacman.conf to rootfs
-        sed -i '/bsdtar -xpf $ROOTFS_IMG\/BigLinux-ARM-$ARCH-latest.tar.gz -C $ROOTFS_IMG\/rootfs_$ARCH/{p;s/.*/sudo cp -a $LIBDIR\/pacman.conf.$ARCH $CHROOTDIR\/etc\/pacman.conf/;}' /usr/share/manjaro-arm-tools/lib/functions.sh
-        fi
-        
         echo '
         [biglinux-stable]
         # SigLevel = PackageRequired
         SigLevel = Optional TrustAll
         Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
+        #copy pacman.conf to rootfs
+        sed -i '/bsdtar -xpf $ROOTFS_IMG\/BigLinux-ARM-$ARCH-latest.tar.gz -C $ROOTFS_IMG\/rootfs_$ARCH/{p;s/.*/sudo cp -a $LIBDIR\/pacman.conf.$ARCH $CHROOTDIR\/etc\/pacman.conf/;}' /usr/share/manjaro-arm-tools/lib/functions.sh
+        else
+        echo '
+        [biglinux-stable]
+        # SigLevel = PackageRequired
+        SigLevel = Optional TrustAll
+        Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        fi
         
         # sudo sed -i 's/BOOT_MNJRO/BOOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh
         # sudo sed -i 's/ROOT_MNJRO/ROOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh

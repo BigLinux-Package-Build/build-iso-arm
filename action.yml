@@ -5,11 +5,11 @@ inputs:
     description: 'arm-profiles to clone'
     required: false
     default: 'https://github.com/biglinux/biglinux-arm-profiles'
-  img-name: 
+  img-name:
     description: 'Name for Imagem'
     required: false
     default: 'BigLinux'
-  name: 
+  name:
     description: 'Name for System, User, HostName and Password.'
     required: false
     default: 'biglinux'
@@ -331,6 +331,11 @@ runs:
         fi
           
         ls -lasih /var/cache/manjaro-arm-tools/img
+          
+        if [ "${{ inputs.bigbranch }}" = "development" ];then
+          imgName=$(find /var/cache/manjaro-arm-tools/img -type f -name "*.img.*")
+          sudo mv "$imgName" "$(sed 's/\./_DEVELOPMENT./' <<< $imgName)"
+        fi
           
         FILE_PATH=$(find /var/cache/manjaro-arm-tools/img -type f -name "*.img.*" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
         cp -v $FILE_PATH .

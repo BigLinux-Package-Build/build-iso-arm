@@ -132,10 +132,10 @@ jobs:
           # sudo sed -i '/\[core\]/{h;s/.*//;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
           echo '
-          # [biglinux-testing]
-          # # SigLevel = PackageRequired
-          # SigLevel = Optional TrustAll
-          # Server = https://repo.biglinux.com.br/testing/aarch64' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+          [biglinux-testing]
+          # SigLevel = PackageRequired
+          SigLevel = Optional TrustAll
+          Server = https://repo.biglinux.com.br/testing/aarch64' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
           echo '
           [biglinux-stable]

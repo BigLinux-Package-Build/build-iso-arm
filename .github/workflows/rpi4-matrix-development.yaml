@@ -1,4 +1,4 @@
-name: Rasp 3/4 Matrix
+name: Rasp 3/4 Matrix Development
 on:
   workflow_dispatch:
     inputs:
@@ -23,7 +23,7 @@ jobs:
         # EDITION: [kde-plasma,minimal,iot]
         EDITION: [kde-plasma,minimal,iot]
         BRANCH: [stable]
-        BIGBRANCH: [stable]
+        BIGBRANCH: [development]
     steps:
       - id: time
         name: Release

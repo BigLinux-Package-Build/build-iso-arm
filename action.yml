@@ -23,9 +23,6 @@ inputs:
     description: 'stable (default), testing, unstable'
     required: false
     default: stable
-  gitbranch:
-    description: 'bigBranch to buld package'
-    required: false
   version:
     description: 'image version'
     required: false
@@ -50,6 +47,9 @@ inputs:
   tmate:
     description: 'run tmate'
     required: false
+  bigbranch:
+    description: 'stable, beta, development'
+    required: true
     
 #  CI_PUB_KEY:
 #    description: 'public gpg key to use'
@@ -248,7 +248,7 @@ runs:
         # sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/aarch64/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         # sudo sed -i '/\[core\]/{h;s/.*//;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
-        if [ "${{ inputs.gitbranch }}" = "testing" ];then
+        if [ "${{ inputs.bigbranch }}" = "development" ];then
         echo '
         [biglinux-testing]
         # SigLevel = PackageRequired

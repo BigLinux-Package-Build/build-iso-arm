@@ -250,17 +250,26 @@ runs:
         
         if [ "${{ inputs.bigbranch }}" = "development" ];then
         echo '
+        [biglinux-stable]
+        # SigLevel = PackageRequired
+        SigLevel = Optional TrustAll
+        Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        
+        echo '
         [biglinux-testing]
         # SigLevel = PackageRequired
         SigLevel = Optional TrustAll
         Server = https://repo.biglinux.com.br/testing/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        
+        #copy pacman.conf to rootfs
+        sed -i '/bsdtar -xpf $ROOTFS_IMG\/Manjaro-ARM-$ARCH-latest.tar.gz -C $ROOTFS_IMG\/rootfs_$ARCH/{p;s/.*/sudo cp -a $LIBDIR\/pacman.conf.$ARCH $CHROOTDIR\/etc\/pacman.conf/;}' /usr/share/manjaro-arm-tools/lib/functions.sh
         fi
         
         echo '
         [biglinux-stable]
         # SigLevel = PackageRequired
         SigLevel = Optional TrustAll
-        Server = https://repo.biglinux.com.br/stable/aarch64' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
         
         # sudo sed -i 's/BOOT_MNJRO/BOOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh
@@ -330,12 +339,12 @@ runs:
           #-p btrfs -z zstd
         fi
           
-        ls -lasih /var/cache/manjaro-arm-tools/img
-          
         if [ "${{ inputs.bigbranch }}" = "development" ];then
           imgName=$(find /var/cache/manjaro-arm-tools/img -type f -name "*.img.*")
           sudo mv "$imgName" "$(sed 's/\./_DEVELOPMENT./' <<< $imgName)"
         fi
+          
+        ls -lasih /var/cache/manjaro-arm-tools/img
           
         FILE_PATH=$(find /var/cache/manjaro-arm-tools/img -type f -name "*.img.*" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
         cp -v $FILE_PATH .

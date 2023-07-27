@@ -248,28 +248,70 @@ runs:
         # sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/aarch64/;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         # sudo sed -i '/\[core\]/{h;s/.*//;p;x;}' /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
         
-        # if [ "${{ inputs.bigbranch }}" = "development" ];then
-        # echo '
-        # [biglinux-testing]
-        # # SigLevel = PackageRequired
-        # SigLevel = Optional TrustAll
-        # Server = https://repo.biglinux.com.br/testing/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        if [ "${{ inputs.bigbranch }}" = "development" ];then
+        echo '
+        # /etc/pacman.conf
+        # See the pacman.conf(5) manpage for option and repository directives
+        #
+        # GENERAL OPTIONS
+        [options]
+        # The following paths are commented out with their default values listed.
+        # If you wish to use different paths, uncomment and update the paths.
+        #RootDir     = /
+        #DBPath      = /var/lib/pacman/
+        #CacheDir    = /var/cache/pacman/pkg/
+        #LogFile     = /var/log/pacman.log
+        #GPGDir      = /etc/pacman.d/gnupg/
+        HoldPkg      = pacman glibc manjaro-system
+        # If upgrades are available for these packages they will be asked for first
+        SyncFirst    = manjaro-system manjaro-keyring manjaro-arm-keyring archlinux-keyring archlinuxarm-keyring biglinux-arm-keyring
+        #XferCommand = /usr/bin/curl -C - -f %u > %o
+        #XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
+        #CleanMethod = KeepInstalled
+        Architecture = aarch64
+
+        # Pacman wont upgrade packages listed in IgnorePkg and members of IgnoreGroup
+        #IgnorePkg   =
+        #IgnoreGroup =
+        #NoUpgrade   =
+        #NoExtract   =
+
+        # Misc options
+        #UseSyslog
+        #Color
+        #NoProgressBar
+        CheckSpace
+        #VerbosePkgLists
+        ParallelDownloads = 5
+
+        # By default, pacman accepts packages signed by keys that its local keyring
+        # trusts (see pacman-key and its man page), as well as unsigned packages.
+        SigLevel    = Required DatabaseOptional
+        LocalFileSigLevel = Optional
+        #RemoteFileSigLevel = Required
+
+        [core]
+        Include = /etc/pacman.d/mirrorlist
+
+        [extra]
+        Include = /etc/pacman.d/mirrorlist
+
+        [community]
+        Include = /etc/pacman.d/mirrorlist
         
-        # echo '
-        # [biglinux-stable]
-        # # SigLevel = PackageRequired
-        # SigLevel = Optional TrustAll
-        # Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
+        [biglinux-testing]
+        # SigLevel = PackageRequired
+        SigLevel = Optional TrustAll
+        Server = https://repo.biglinux.com.br/testing/$arch
         
-        # #copy pacman.conf to rootfs
-        # sed -i '/bsdtar -xpf $ROOTFS_IMG\/BigLinux-ARM-$ARCH-latest.tar.gz -C $ROOTFS_IMG\/rootfs_$ARCH/{p;s/.*/sudo cp -a $LIBDIR\/pacman.conf.$ARCH $CHROOTDIR\/etc\/pacman.conf/;}' /usr/share/manjaro-arm-tools/lib/functions.sh
-        # else
-        # echo '
-        # [biglinux-stable]
-        # # SigLevel = PackageRequired
-        # SigLevel = Optional TrustAll
-        # Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
-        # fi
+        [biglinux-stable]
+        # SigLevel = PackageRequired
+        SigLevel = Optional TrustAll
+        Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee /usr/share/manjaro-arm-tools/lib/pacman.conf
+        
+        #copy pacman.conf to rootfs
+        sed -i '/bsdtar -xpf $ROOTFS_IMG\/BigLinux-ARM-$ARCH-latest.tar.gz -C $ROOTFS_IMG\/rootfs_$ARCH/{p;s/.*/sudo cp -a $LIBDIR\/pacman.conf $CHROOTDIR\/etc\/pacman.conf/;}' /usr/share/manjaro-arm-tools/lib/functions.sh
+        fi
         
         # sudo sed -i 's/BOOT_MNJRO/BOOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh
         # sudo sed -i 's/ROOT_MNJRO/ROOT_BIGARM/' share/manjaro-arm-tools/lib/functions.sh

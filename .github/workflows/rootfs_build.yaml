@@ -155,6 +155,9 @@ jobs:
           #editar arquivo /usr/bin/buildrootfs
           #edicionar mais pacotes na linha:
           #$LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman
+          
+          #add biglinux-arm-keyring
+          sudo sed -i '/os-release/{p;s/.*/$CHROOTDIR pacman-key --init/;}' /usr/bin/buildrootfs
           newPackages="biglinux-arm-keyring"
           sudo sed -i "/pacstrap/s/pacman/pacman $newPackages/2" /usr/bin/buildrootfs
           

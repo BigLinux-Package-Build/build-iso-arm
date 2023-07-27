@@ -41,8 +41,7 @@ jobs:
           
       - id: image-build
         name: Image Build
-        # uses: BigLinux-Package-Build/build-iso-arm@main
-        uses: manjaro-arm/rootfs@master
+        uses: BigLinux-Package-Build/build-iso-arm@main
         with:
           img-name: ${{ matrix.img-name }}
           name: ${{ steps.name.outputs.name }}

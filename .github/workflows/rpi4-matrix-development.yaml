@@ -21,7 +21,7 @@ jobs:
         DEVICE: [rpi4,generic]
         # EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
         # EDITION: [kde-plasma,minimal,iot]
-        EDITION: [kde-plasma]
+        EDITION: [minimal]
         BRANCH: [stable]
         BIGBRANCH: [development]
     steps:

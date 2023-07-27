@@ -155,8 +155,8 @@ jobs:
           #editar arquivo /usr/bin/buildrootfs
           #edicionar mais pacotes na linha:
           #$LIBDIR/pacstrap -G -M -C $LIBDIR/pacman.conf.$ARCH $BUILDDIR/$ARCH pacman
-          newPackages="git biglinux-arm-keyring"
-          # sudo sed -i "/pacstrap/s/pacman/pacman $newPackages/2" /usr/bin/buildrootfs
+          newPackages="biglinux-arm-keyring"
+          sudo sed -i "/pacstrap/s/pacman/pacman $newPackages/2" /usr/bin/buildrootfs
           
           #remover compress e gerar rootfs
           sudo sed -i ':a;$!{N;ba;};s/\(.*\)compress_rootfs/\1/' /usr/bin/buildrootfs

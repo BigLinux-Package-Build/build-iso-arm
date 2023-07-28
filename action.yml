@@ -313,8 +313,8 @@ runs:
         sed -i '/bsdtar -xpf $ROOTFS_IMG\/BigLinux-ARM-$ARCH-latest.tar.gz -C $ROOTFS_IMG\/rootfs_$ARCH/{p;s/.*/sudo cp -a $LIBDIR\/pacman.conf $CHROOTDIR\/etc\/pacman.conf/;}' /usr/share/manjaro-arm-tools/lib/functions.sh
         fi
         
-        sudo sed -i 's/BOOT_MNJRO/BOOT_BIGARM/' /usr/share/manjaro-arm-tools/lib/functions.sh
-        sudo sed -i 's/ROOT_MNJRO/ROOT_BIGARM/' /usr/share/manjaro-arm-tools/lib/functions.sh
+        # sudo sed -i 's/BOOT_MNJRO/BOOT_BIGARM/' /usr/share/manjaro-arm-tools/lib/functions.sh
+        # sudo sed -i 's/ROOT_MNJRO/ROOT_BIGARM/' /usr/share/manjaro-arm-tools/lib/functions.sh
         #
         # sudo sed -i "/--populate/s/manjaro-arm/manjaro-arm ${{ inputs.name }}/" /usr/share/manjaro-arm-tools/lib/functions.sh
         # sudo sed -i 's/Optional TrustAll/PackageRequired/' /usr/share/manjaro-arm-tools/lib/functions.sh

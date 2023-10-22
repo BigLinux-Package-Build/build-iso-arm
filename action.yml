@@ -349,7 +349,7 @@ runs:
       run: |
         #Checkout ARM Package
         git clone ${{ github.event.client_payload.url }}
-        rm -r biglinux-make-arm-profiles
+        rm -r biglinux-arm-profiles/biglinux-make-arm-profiles
         
     # Tmate ##
     - name: Setup TMATE Session

@@ -169,6 +169,8 @@ runs:
         gh release -R BigLinux-Package-Build/build-iso-arm download $(gh release list -R BigLinux-Package-Build/build-iso-arm | grep rootfs | awk '{print $2}' | head -n1)
         cp BigLinux-ARM-aarch64-latest.tar.gz /var/lib/manjaro-arm-tools/img
         
+        sed -i '/bsdtar -xpf/s/Manjaro/BigLinux/' /usr/share/manjaro-arm-tools/lib/functions.sh
+        sed -i 's/Manjaro-ARM-$ARCH-latest.tar.gz/BigLinux-ARM-aarch64-latest.tar.gz/' /usr/share/manjaro-arm-tools/lib/functions.sh
         
     - 
       name: checkout-arm-profiles

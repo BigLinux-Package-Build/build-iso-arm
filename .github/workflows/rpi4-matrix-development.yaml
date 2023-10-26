@@ -56,7 +56,7 @@ jobs:
           # overlay-repo: https://repo.biglinux.com.br/stable/$arch/biglinux-stable.db
           #gpg-key: ${{ secrets.CI_GPG_SECRET }}
           #gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}
-          overlay-repo: https://repo.biglinux.com.br/testing/
+          overlay-repo: https:\/\/repo.biglinux.com.br\/testing\/aarch64\/
           
       - name: Release Upload
         uses: softprops/action-gh-release@v0.1.15

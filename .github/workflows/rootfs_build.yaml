@@ -190,6 +190,17 @@ jobs:
           SigLevel = Optional TrustAll
           Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a $BUILDDIR/$ARCH/etc/pacman.conf
           
+          rm -f "$BUILDDIR/$ARCH/etc/resolv.conf"
+          echo "nameserver 1.1.1.1" > "$BUILDDIR/$ARCH/etc/resolv.conf"
+          mount --bind "$BUILDDIR/$ARCH/" "$BUILDDIR/$ARCH/"
+          mount --bind /dev "$BUILDDIR/$ARCH/dev"
+          mount --bind /proc "$BUILDDIR/$ARCH/proc"
+          mount --bind /sys "$BUILDDIR/$ARCH/sys"
+          chroot "$BUILDDIR/$ARCH" pacman-key --init
+          chroot "$BUILDDIR/$ARCH" pacman-key --populate manjaro
+          chroot "$BUILDDIR/$ARCH" pacman-key --populate archlinuxarm
+          chroot "$BUILDDIR/$ARCH" pacman-key --populate biglinux
+          chroot "$BUILDDIR/$ARCH" pacman -Sy --noconfirm util-linux
           
           pwd=$PWD
           

@@ -23,7 +23,7 @@ jobs:
           format: '23.MM'
       -
         id: image-build
-        uses: manjaro-arm/rootfs@master
+        uses: BigLinux-Package-Build/build-iso-arm@main
         with:
           device: ${{ matrix.device }}
           edition: ${{ matrix.edition }}

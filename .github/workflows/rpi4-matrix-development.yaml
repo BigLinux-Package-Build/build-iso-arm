@@ -50,7 +50,6 @@ jobs:
           branch: ${{ matrix.branch }}
           bigbranch: ${{ matrix.bigbranch }}
           version: ${{ steps.time.outputs.time }}
-          type: image
           tmate: ${{ inputs.debug_enabled }}
           # if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
           # overlay-repo: https://repo.biglinux.com.br/stable/$arch/biglinux-stable.db

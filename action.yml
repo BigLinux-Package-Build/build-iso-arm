@@ -156,8 +156,10 @@ runs:
         sudo sed -i -e 's|1>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh   
         sudo sed -i -e 's|1> /dev/null 2>&1||g' /usr/share/manjaro-arm-tools/lib/functions.sh
         sudo sed -i -e 's|2>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh 
-    - 
-      name: checkout-arm-profiles
+    - name: Setup TMATE Session
+      uses: mxschmitt/action-tmate@v3
+      
+    - name: checkout-arm-profiles
       shell: bash
       env:
         REPO: ${{ inputs.arm-profiles-repo }}

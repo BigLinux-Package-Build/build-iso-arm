@@ -162,7 +162,8 @@ runs:
       env:
         REPO: ${{ inputs.arm-profiles-repo }}
       run: |
-        sudo git clone --depth 1 ${REPO} arm-profiles         
+        sudo git clone --depth 1 ${REPO} arm-profiles
+        git checkout tags/$(git describe --tags --abbrev=0)
     -
       id: build
       shell: bash

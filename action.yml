@@ -167,7 +167,7 @@ runs:
       run: |
         sudo git clone ${REPO} arm-profiles
         cd arm-profiles
-        git checkout tags/$(git describe --tags --abbrev=0)
+        sudo git checkout tags/$(git describe --tags --abbrev=0)
     -
       id: build
       shell: bash

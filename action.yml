@@ -156,15 +156,17 @@ runs:
         sudo sed -i -e 's|1>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh   
         sudo sed -i -e 's|1> /dev/null 2>&1||g' /usr/share/manjaro-arm-tools/lib/functions.sh
         sudo sed -i -e 's|2>/dev/null||g' /usr/share/manjaro-arm-tools/lib/functions.sh 
-    - name: Setup TMATE Session
-      uses: mxschmitt/action-tmate@v3
+        
+    # - name: Setup TMATE Session
+    #   uses: mxschmitt/action-tmate@v3
       
     - name: checkout-arm-profiles
       shell: bash
       env:
         REPO: ${{ inputs.arm-profiles-repo }}
       run: |
-        sudo git clone --depth 1 ${REPO} arm-profiles
+        sudo git clone ${REPO} arm-profiles
+        cd arm-profiles
         git checkout tags/$(git describe --tags --abbrev=0)
     -
       id: build

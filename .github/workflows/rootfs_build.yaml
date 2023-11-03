@@ -190,7 +190,7 @@ jobs:
           # sudo sed -i '/\[core\]/{h;s/.*//;p;x;}' $BUILDDIR/$ARCH/etc/pacman.conf
           echo '
           [biglinux-stable]
-          # SigLevel = PackageRequired
+          SigLevel = PackageRequired
           SigLevel = Optional TrustAll
           Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a $BUILDDIR/$ARCH/etc/pacman.conf
           

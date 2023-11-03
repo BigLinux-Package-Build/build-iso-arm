@@ -143,6 +143,10 @@ jobs:
           SigLevel = Optional TrustAll
           Server = https://repo.biglinux.com.br/stable/aarch64' | sudo tee -a /usr/share/manjaro-arm-tools/lib/pacman.conf.aarch64
           
+      - name: 
+        shell: bash
+        run: |
+          git clone --depth 1 https://github.com/biglinux/biglinux-arm-profiles.git
                 
       - name: Tmate
         uses: mxschmitt/action-tmate@v3
@@ -191,6 +195,7 @@ jobs:
           Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a $BUILDDIR/$ARCH/etc/pacman.conf
           
           #Polulate Keys and install some programs
+          pushd biglinux-arm-profiles
           sudo rm -f "$BUILDDIR/$ARCH/etc/resolv.conf"
           echo "nameserver 1.1.1.1" | sudo tee "$BUILDDIR/$ARCH/etc/resolv.conf"
           sudo mount --bind "$BUILDDIR/$ARCH/" "$BUILDDIR/$ARCH/"
@@ -201,12 +206,12 @@ jobs:
           sudo chroot "$BUILDDIR/$ARCH" pacman-key --populate manjaro
           sudo chroot "$BUILDDIR/$ARCH" pacman-key --populate archlinuxarm
           sudo chroot "$BUILDDIR/$ARCH" pacman-key --populate biglinux
-          sudo chroot "$BUILDDIR/$ARCH" pacman -Sy --noconfirm util-linux
+          sudo chroot "$BUILDDIR/$ARCH" pacman -Sy --noconfirm util-linux $(sed 's/#.*//;s/^ \+//;/^$/d;s/>[^ ]* //g' rootfs)
           sudo rm -rf "$BUILDDIR/$ARCH/var/cache/pacman/pkg/"
           sudo umount -l "$BUILDDIR/$ARCH/sys"
           sudo umount -l "$BUILDDIR/$ARCH/proc"
           sudo umount -l "$BUILDDIR/$ARCH/dev"
-          
+          popd
           pwd=$PWD
           
           #Compressing rootfs...

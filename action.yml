@@ -26,15 +26,6 @@ inputs:
     description: 'image type: normal (default), factory'
     required: false
     default: normal
-#  CI_PUB_KEY:
-#    description: 'public gpg key to use'
-#    required: true
-#  CI_GPG_SECRET: 
-#    description: 'private key to use'
-#    required: true
-#  CI_GPG_PASSPHRASE: 
-#    description: 'passphrase for private key'
-#    required: true
   img-name:
     description: 'Name for Imagem'
     required: false
@@ -364,9 +355,6 @@ runs:
         BRANCH: ${{ inputs.branch }}
         VERSION: ${{ inputs.version }}
         IMGTYPE: ${{ inputs.imgtype }}
-        #CI_PUB_KEY: ${{ inputs.CI_PUB_KEY }}
-        #CI_GPG_SECRET: ${{ inputs.CI_GPG_SECRET }}
-        #CI_GPG_PASSPHRASE: ${{ inputs.CI_GPG_PASSPHRASE }}
       run: |
         [ "$IMGTYPE" != "factory" ] && unset IMGTYPE
         sudo mv -v $GITHUB_WORKSPACE/arm-profiles /usr/share/manjaro-arm-tools/profiles
@@ -387,94 +375,35 @@ runs:
           
         FILE_PATH=$(find /var/cache/manjaro-arm-tools/img -type f -name "*.img.xz" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
         cp -v $FILE_PATH .
-        echo "file-path=$(basename $FILE_PATH)" >> $GITHUB_OUTPUT
+        # echo "file-path=$(basename $FILE_PATH)" >> $GITHUB_OUTPUT
           
         sha256sum $(basename $FILE_PATH) > $(basename $FILE_PATH).sha256
-        echo "file-sha256=$(basename $FILE_PATH).sha256" >> $GITHUB_OUTPUT
+        #echo "file-sha256=$(basename $FILE_PATH).sha256" >> $GITHUB_OUTPUT
         mktorrent -v -a udp://tracker.opentrackr.org:1337 -l 21 -w https://github.com/$GITHUB_REPOSITORY/releases/download/$VERSION/$(basename $FILE_PATH) -o $(basename $FILE_PATH).torrent $(basename $FILE_PATH)
-        echo "file-torrent=$(basename $FILE_PATH).torrent" >> $GITHUB_OUTPUT
-        
-        # Do GPG signing
-        #echo "setup values"
-        #GPG_HOMEDIR="$(mktemp -d -t gnupg.XXX)"
-        #SECRET_KEY_FILE="$GPG_HOMEDIR/secret.key"
-        #PUBLIC_KEY_FILE="$GPG_HOMEDIR/public_key.gpg"
-        #PASSPHRASE_FILE="$GPG_HOMEDIR/passphrase.file"
-        #GPG="gpg --homedir=$GPG_HOMEDIR --no-tty --batch --yes"
+        #echo "file-torrent=$(basename $FILE_PATH).torrent" >> $GITHUB_OUTPUT
           
-        #echo "unpack public key"
-        #echo "$CI_PUB_KEY" | base64 --decode > "$PUBLIC_KEY_FILE"
-
-        #echo "unpack secret key"
-        #echo "$CI_GPG_SECRET" | base64 --decode > "$SECRET_KEY_FILE"
-          
-        #echo "passphrase"
-        #echo "$CI_GPG_PASSPHRASE" > "$PASSPHRASE_FILE"
-          
-        #echo "Secrets unpacked..."
-
-        #paperkey --pubring "$PUBLIC_KEY_FILE" --secrets "$SECRET_KEY_FILE" \
-        #| $GPG --import &>/dev/null
-
-        #$GPG --pinentry-mode loopback --detach-sign --use-agent -u "$CI_GPG_KEY" --passphrase-file "$PASSPHRASE_FILE" $(basename $FILE_PATH)
-
-        #ls -lasih
-          
-        #echo "Verifying file"
-        #$GPG --verify $(basename $FILE_PATH).sig $(basename $FILE_PATH)
-        #echo "file-signature=$(basename $FILE_PATH).sig" >> $GITHUB_OUTPUT
-          
-        #echo "cleaning up"
-        #find "$GPG_HOMEDIR" -type f -exec shred {} \;
-        #rm -rf "$GPG_HOMEDIR"
-        #echo "script done"
-          
+        # Rename pkgs
+        echo "Rename pkgs"
+        imgNamePkgs=$(find /var/cache/manjaro-arm-tools/img -type f -name "*-pkgs.txt" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
         if [ "${{ inputs.bigbranch }}" = "development" ];then
-          imgNamePkgs=$(find /var/cache/manjaro-arm-tools/img -type f -name "*-pkgs.txt" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
-          sudo mv "$imgNamePkgs" "$(sed 's/-pkgs/_DEVELOPMENT-pkgs/' <<< $imgNamePkgs)"
+          sudo cp "$imgNamePkgs" "$(sed 's/-pkgs.*/_DEVELOPMENT.img.xz.pkgs/' <<< $imgNamePkgs)"
+        else
+          sudo cp "$imgNamePkgs" "$(sed 's/-pkgs.*/.img.xz.pkgs/' <<< $imgNamePkgs)"
         fi
-          FILE_PKG=$(find /var/cache/manjaro-arm-tools/img -type f -name "*-pkgs.txt" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
-          cp -v $FILE_PKG .
-          echo "file-pkg=$(basename $FILE_PKG)" >> $GITHUB_OUTPUT
         
-#         echo "Split file"
-#         if [[ -z "$(du --threshold=1950M $FILE_PATH)" ]]; then
-#           # iso is small enough to upload already
-#           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
-#           
-#         else
-#           # iso is too big - creating a split-zip
-#           zip -j -s 1950m $FILE_PATH.zip $FILE_PATH
-#           
-#           ls -lasih
-#           
-#           echo "FILE_PATH_ZIP=$(basename ${FILE_PATH}.zip)" >> $GITHUB_ENV
-#           echo "FILE_PATH_Z01=$(basename ${FILE_PATH}.z01)" >> $GITHUB_ENV
-#           
-#           # REMOTE_FILES=$(find . -maxdepth 1 -name "*.z*" -exec basename {} \; | xargs -I{} echo "-w \"${GITHUB_LINK}/{}\"")
-#           # gh release upload ${release} --repo ${{ github.repository }} --clobber \
-#           #  ./${{ steps.image-build.outputs.file-path }}+(.z*|.sha*|.pkgs|.sig|.torrent|.md5)
-#         fi
-#         
-#         # Copy filepaths
-#         echo "FILE_SHA256=$(basename $FILE_PATH).sha256" >> $GITHUB_ENV
-#         echo "FILE_TORRENT=$(basename $FILE_PATH).torrent" >> $GITHUB_ENV
-#         echo "FILE_PKG=$(basename $FILE_PKG)" >> $GITHUB_ENV
-#         #echo "FILE_SIG=$(basename $FILE_PATH).sig" >> $GITHUB_ENV
+        FILE_PKG=$(find /var/cache/manjaro-arm-tools/img -type f -name "*.pkgs" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
+        cp -v $FILE_PKG .
+        #echo "file-pkg=$(basename $FILE_PKG)" >> $GITHUB_OUTPUT
         
-    - name: Setup TMATE Session
-      uses: mxschmitt/action-tmate@v3
-      # if: ${{ failure() || cancelled() }}
-
-#    -
-#      id: gpg_sign
-#      shell: bash
-#      run: |
-#        if [ -z "${{ inputs.CI_GPG_SECRET }}" ]; then 
-#          echo "no gpg secret given"
-#          exit 0
-#        fi
-#        cat <(echo -e "${{ inputs.CI_GPG_SECRET }}" | base64 --decode) | gpg --batch --import
-#        shopt -s extglob
-#        gpg --pinentry-mode loopback --passphrase "${{ inputs.CI_GPG_PASSPHRASE }}" --detach-sign $(basename $FILE_PATH)
-#        echo "FILE_SIG=$(basename $FILE_PATH).sig" >> $GITHUB_ENV
+        echo "Split file"
+        zip -j -s 1950m $(basename ${FILE_PATH}.zip) $(basename ${FILE_PATH})
+          
+        ls -lasih
+          
+        echo "FILE_PATH_ZIP=$(basename ${FILE_PATH}.zip)" >> $GITHUB_ENV
+        echo "FILE_PATH_Z01=$(basename ${FILE_PATH}.z01)" >> $GITHUB_ENV
+        echo "FILE_PKG=$(basename $FILE_PATH).pkgs" >> $GITHUB_ENV
+        echo "FILE_SHA256=$(basename $FILE_PATH).sha256" >> $GITHUB_ENV
+        echo "FILE_TORRENT=$(basename $FILE_PATH).torrent" >> $GITHUB_ENV
+        #echo "FILE_SIG=$(basename $FILE_PATH).sig" >> $GITHUB_ENV
+        

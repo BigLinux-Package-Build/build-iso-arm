@@ -67,6 +67,8 @@ jobs:
           prerelease: false
           files: |
             ${{ env.FILE_PATH }}
+            ${{ env.FILE_PATH_ZIP }}
+            ${{ env.FILE_PATH_Z01 }}
             #${{ env.FILE_SHA1 }}
             ${{ env.FILE_SHA256 }}
             ${{ env.FILE_TORRENT }}

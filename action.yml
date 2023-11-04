@@ -438,7 +438,7 @@ runs:
           echo "file-pkg=$(basename $FILE_PKG)" >> $GITHUB_OUTPUT
         
 #         echo "Split file"
-#         if [[ -z "$(du --threshold=1950M $FILE_PKG)" ]]; then
+#         if [[ -z "$(du --threshold=1950M $FILE_PATH)" ]]; then
 #           # iso is small enough to upload already
 #           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
 #           

@@ -189,6 +189,11 @@ jobs:
           # sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/$arch/;p;x;}' $BUILDDIR/$ARCH/etc/pacman.conf
           # sudo sed -i '/\[core\]/{h;s/.*//;p;x;}' $BUILDDIR/$ARCH/etc/pacman.conf
           echo '
+          [biglinux-testing]
+          SigLevel = PackageRequired
+          SigLevel = Optional TrustAll
+          Server = https://repo.biglinux.com.br/testing/$arch
+          
           [biglinux-stable]
           SigLevel = PackageRequired
           SigLevel = Optional TrustAll

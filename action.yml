@@ -315,6 +315,9 @@ runs:
         
         #copy pacman.conf to rootfs
         sed -i '/bsdtar -xpf $ROOTFS_IMG\/BigLinux-ARM-$ARCH-latest.tar.gz -C $ROOTFS_IMG\/rootfs_$ARCH/{p;s/.*/sudo cp -a $LIBDIR\/pacman.conf $CHROOTDIR\/etc\/pacman.conf/;}' /usr/share/manjaro-arm-tools/lib/functions.sh
+        
+        #change to fast compress
+        sed '/--threads=0 /s/--threads=0/--threads=0 --fast/' /usr/share/manjaro-arm-tools/lib/functions.sh
         fi
         
         # sudo sed -i 's/BOOT_MNJRO/BOOT_BIGARM/g' /usr/share/manjaro-arm-tools/lib/functions.sh

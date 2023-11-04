@@ -451,9 +451,9 @@ runs:
           echo "FILE_PATH_ZIP=$(basename ${FILE_PATH}.zip)" >> $GITHUB_ENV
           echo "FILE_PATH_Z01=$(basename ${FILE_PATH}.z01)" >> $GITHUB_ENV
           
-          REMOTE_FILES=$(find . -maxdepth 1 -name "*.z*" -exec basename {} \; | xargs -I{} echo "-w \"${GITHUB_LINK}/{}\"")
-          gh release upload ${release} --repo ${{ github.repository }} --clobber \
-            ./${{ steps.image-build.outputs.file-path }}+(.z*|.sha*|.pkgs|.sig|.torrent|.md5)
+          # REMOTE_FILES=$(find . -maxdepth 1 -name "*.z*" -exec basename {} \; | xargs -I{} echo "-w \"${GITHUB_LINK}/{}\"")
+          # gh release upload ${release} --repo ${{ github.repository }} --clobber \
+          #  ./${{ steps.image-build.outputs.file-path }}+(.z*|.sha*|.pkgs|.sig|.torrent|.md5)
         fi
         
         # Copy filepaths
@@ -461,6 +461,10 @@ runs:
         echo "FILE_TORRENT=$(basename $FILE_PATH).torrent" >> $GITHUB_ENV
         echo "FILE_PKG=$(basename $FILE_PKG)" >> $GITHUB_ENV
         #echo "FILE_SIG=$(basename $FILE_PATH).sig" >> $GITHUB_ENV
+        
+    - name: Setup TMATE Session
+      uses: mxschmitt/action-tmate@v3
+      if: ${{ failure() || cancelled() }}
 
 #    -
 #      id: gpg_sign

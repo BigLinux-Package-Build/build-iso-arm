@@ -437,7 +437,7 @@ runs:
           
         if [ "${{ inputs.bigbranch }}" = "development" ];then
           imgNamePkgs=$(find /var/cache/manjaro-arm-tools/img -type f -name "*-pkgs.txt" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
-          sudo mv "$imgName" "$(sed 's/\./_DEVELOPMENT./' <<< $imgNamePkgs)"
+          sudo mv "$imgNamePkgs" "$(sed 's/-pkgs/_DEVELOPMENT-pkgs/' <<< $imgNamePkgs)"
         fi
           FILE_PKG=$(find /var/cache/manjaro-arm-tools/img -type f -name "*-pkgs.txt" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
           cp -v $FILE_PKG .

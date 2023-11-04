@@ -429,12 +429,6 @@ runs:
         #rm -rf "$GPG_HOMEDIR"
         #echo "script done"
           
-        # Copy filepaths
-        echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
-        echo "FILE_SHA256=$(basename $FILE_PATH).sha256" >> $GITHUB_ENV
-        echo "FILE_TORRENT=$(basename $FILE_PATH).torrent" >> $GITHUB_ENV
-        #echo "FILE_SIG=$(basename $FILE_PATH).sig" >> $GITHUB_ENV
-          
         if [ "${{ inputs.bigbranch }}" = "development" ];then
           imgNamePkgs=$(find /var/cache/manjaro-arm-tools/img -type f -name "*-pkgs.txt" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
           sudo mv "$imgNamePkgs" "$(sed 's/-pkgs/_DEVELOPMENT-pkgs/' <<< $imgNamePkgs)"
@@ -442,7 +436,32 @@ runs:
           FILE_PKG=$(find /var/cache/manjaro-arm-tools/img -type f -name "*-pkgs.txt" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
           cp -v $FILE_PKG .
         echo "file-pkg=$(basename $FILE_PKG)" >> $GITHUB_OUTPUT
+        
+        echo "Split file"
+        if [[ -z "$(du --threshold=1950M $FILE_PKG)" ]]; then
+          # iso is small enough to upload already
+          echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
+          
+        else
+          # iso is too big - creating a split-zip
+          zip -j -s 1950m $FILE_PATH.zip $FILE_PATH
+          
+          ls -lasih
+          
+          echo "FILE_PATH_ZIP=$(basename ${FILE_PATH}.zip)" >> $GITHUB_ENV
+          echo "FILE_PATH_Z01=$(basename ${FILE_PATH}.z01)" >> $GITHUB_ENV
+          
+          REMOTE_FILES=$(find . -maxdepth 1 -name "*.z*" -exec basename {} \; | xargs -I{} echo "-w \"${GITHUB_LINK}/{}\"")
+          gh release upload ${release} --repo ${{ github.repository }} --clobber \
+            ./${{ steps.image-build.outputs.file-path }}+(.z*|.sha*|.pkgs|.sig|.torrent|.md5)
+        fi
+        
+        # Copy filepaths
+        echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
+        echo "FILE_SHA256=$(basename $FILE_PATH).sha256" >> $GITHUB_ENV
+        echo "FILE_TORRENT=$(basename $FILE_PATH).torrent" >> $GITHUB_ENV
         echo "FILE_PKG=$(basename $FILE_PKG)" >> $GITHUB_ENV
+        #echo "FILE_SIG=$(basename $FILE_PATH).sig" >> $GITHUB_ENV
 
 #    -
 #      id: gpg_sign
